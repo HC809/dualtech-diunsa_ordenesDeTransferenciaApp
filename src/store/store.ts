@@ -2,12 +2,12 @@ import { combineReducers } from "redux";
 //import { RESET_STORE } from "../constants/shared";
 //Reducers
 import configReducer from "./reducers/configReducer";
-import productosReducer from "./reducers/productosReducer";
+import authReducer from "./reducers/authReducer";
 import uiReducer from "./reducers/uiReducer";
 
 const Reducers = combineReducers({
   config: configReducer,
-  productos: productosReducer,
+  auth: authReducer,
   ui: uiReducer,
 });
 

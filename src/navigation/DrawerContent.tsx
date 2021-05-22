@@ -49,10 +49,7 @@ export const DrawerContent = ({
         onSelect={(index) => navigation.navigate(state.routeNames[index.row])}
       >
         <DrawerItem title="Inicio" accessoryLeft={HomeIcon} />
-        <DrawerItem
-          title="Productos / Servicios"
-          accessoryLeft={ProductosIcon}
-        />
+        <DrawerItem title="Entradas" accessoryLeft={ProductosIcon} />
         <DrawerItem title="Configuración" accessoryLeft={ConfigIcon} />
       </Drawer>
     </SafeAreaView>

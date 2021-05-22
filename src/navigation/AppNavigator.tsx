@@ -18,33 +18,19 @@ import {
   LOGIN_SCREEN,
   INICIO_SCREEN,
   CONFIG_SCREEN,
-  PRODUCTOS_SCREEN,
-  CREATE_PRODUCTO_SCREEN,
-  EDIT_PRODUCTO_SCREEN,
+  ENTRADAS_SCREEN,
 } from "../constants/screens";
 //Screens
 import { LoginScreen } from "../screens/LoginScreen";
 import { HomeScreen } from "../screens/HomeScreen";
 import { ConfigScreen } from "../screens/ConfigScreen";
-import { ProductosScreen } from "../screens/ProductosScreen";
-import { CreateProductoScreen } from "../screens/CreateProductoScreen";
-import { EditProductoScreen } from "../screens/EditProductoScreen";
+import { EntradaScreen } from "../screens/EntradaScreen";
 //Drawer Content
 import { DrawerContent } from "./DrawerContent";
-//Models
-import { IProducto } from "../models/IProducto";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
-
-export type ProductosStackParams = {
-  ProductosScreen: undefined;
-  CreateProductoScreen: undefined;
-  EditProductoScreen: { producto: IProducto };
-};
-
-const ProductStack = createStackNavigator<ProductosStackParams>();
 
 //#region STACK NAVIGATORS
 const GeneralNavigator = () => (
@@ -78,11 +64,11 @@ const InicioNavigator = () => (
   </Stack.Navigator>
 );
 
-const ConfigNavigator = () => (
-  <Stack.Navigator headerMode="none" initialRouteName={CONFIG_SCREEN}>
+const EntradaNavigator = () => (
+  <Stack.Navigator headerMode="none" initialRouteName={ENTRADAS_SCREEN}>
     <Stack.Screen
-      name={CONFIG_SCREEN}
-      component={ConfigScreen}
+      name={ENTRADAS_SCREEN}
+      component={EntradaScreen}
       options={{
         headerShown: false,
       }}
@@ -90,27 +76,13 @@ const ConfigNavigator = () => (
   </Stack.Navigator>
 );
 
-const ProductosNavigator = () => (
-  <Stack.Navigator
-    headerMode="none"
-    initialRouteName={PRODUCTOS_SCREEN}
-    mode="modal"
-  >
-    <ProductStack.Screen name={PRODUCTOS_SCREEN} component={ProductosScreen} />
-    <ProductStack.Screen
-      name={CREATE_PRODUCTO_SCREEN}
-      component={CreateProductoScreen}
+const ConfigNavigator = () => (
+  <Stack.Navigator headerMode="none" initialRouteName={CONFIG_SCREEN}>
+    <Stack.Screen
+      name={CONFIG_SCREEN}
+      component={ConfigScreen}
       options={{
         headerShown: false,
-        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-      }}
-    />
-    <ProductStack.Screen
-      name={EDIT_PRODUCTO_SCREEN}
-      component={EditProductoScreen}
-      options={{
-        headerShown: false,
-        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
       }}
     />
   </Stack.Navigator>
@@ -128,7 +100,7 @@ const MyDrawerNavigator = () => {
       drawerContent={(props) => <DrawerContent {...props} />}
     >
       <Drawer.Screen name={INICIO_SCREEN} component={InicioNavigator} />
-      <Drawer.Screen name={PRODUCTOS_SCREEN} component={ProductosNavigator} />
+      <Drawer.Screen name={ENTRADAS_SCREEN} component={EntradaNavigator} />
       <Drawer.Screen name={CONFIG_SCREEN} component={ConfigNavigator} />
       <Drawer.Screen name={LOGIN_SCREEN} component={GeneralNavigator} />
     </Drawer.Navigator>

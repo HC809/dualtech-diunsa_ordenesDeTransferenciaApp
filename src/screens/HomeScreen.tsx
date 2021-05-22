@@ -16,12 +16,12 @@ export const HomeScreen = ({ navigation }: Props) => {
   return (
     <SafeAreaView style={styles.flex}>
       <TopNavigation
-        title={() => <ScreenTitle title="Mi Negocio" />}
+        title={() => <ScreenTitle title="Inicio" />}
         accessoryLeft={renderLeftAction}
       />
       <Divider style={styles.dividerColor} />
       <Layout style={styles.centerLayout}>
-        <Text category="h1">Inicio</Text>
+        <Text category="h1">Inicio Screen</Text>
       </Layout>
     </SafeAreaView>
   );

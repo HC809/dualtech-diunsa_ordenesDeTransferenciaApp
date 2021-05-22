@@ -1,9 +1,10 @@
 import axios, { AxiosResponse } from "axios";
 import { IApiResponse } from "../models/shared/IApiResponse";
+import { ILogin } from "../models/ILogin";
 //Models
 
 //URL AP
-axios.defaults.baseURL = "https://agsapirest.azurewebsites.net";
+axios.defaults.baseURL = "";
 
 axios.interceptors.response.use(undefined, (error) => {
   error?.message !== undefined
@@ -24,12 +25,10 @@ const requests = {
   del: (url: string) => axios.delete(url).then(responseBody),
 };
 
-//Config Endpoints
-const fetchConfig = {
-  getEmpresas: (): Promise<IApiResponse> =>
-    requests.get(`/configuracion/getEmpresas`),
-  getSucursales: (codigoEmpresa: string): Promise<IApiResponse> =>
-    requests.get(`/configuracion/getSucursales/${codigoEmpresa}`),
+//Auth Endpoints
+const auth = {
+  login: ({ username, password }: ILogin): Promise<IApiResponse> =>
+    requests.post(`/controller/loginAction`, { username, password }),
 };
 
-export { fetchConfig };
+export { auth };

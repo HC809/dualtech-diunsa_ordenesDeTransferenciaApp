@@ -56,6 +56,13 @@ const GeneralNavigator = () => (
         headerShown: false,
       }}
     />
+    <Stack.Screen
+      name={INICIO_SCREEN}
+      component={HomeScreen}
+      options={{
+        headerShown: false,
+      }}
+    />
   </Stack.Navigator>
 );
 
@@ -120,10 +127,10 @@ const MyDrawerNavigator = () => {
       screenOptions={{ gestureEnabled: true }}
       drawerContent={(props) => <DrawerContent {...props} />}
     >
-      <Drawer.Screen name={LOGIN_SCREEN} component={GeneralNavigator} />
       <Drawer.Screen name={INICIO_SCREEN} component={InicioNavigator} />
       <Drawer.Screen name={PRODUCTOS_SCREEN} component={ProductosNavigator} />
       <Drawer.Screen name={CONFIG_SCREEN} component={ConfigNavigator} />
+      <Drawer.Screen name={LOGIN_SCREEN} component={GeneralNavigator} />
     </Drawer.Navigator>
   );
 };

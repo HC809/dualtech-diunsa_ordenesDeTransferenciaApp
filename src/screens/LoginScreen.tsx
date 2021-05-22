@@ -1,9 +1,16 @@
 import React, { useRef, useState } from "react";
-import { Text, Button, Input, Icon, IconProps } from "@ui-kitten/components";
+import { KeyboardAvoidingView, View } from "react-native";
+import {
+  ScrollView,
+  TouchableWithoutFeedback,
+} from "react-native-gesture-handler";
+import { Text, Button, Input, IconProps } from "@ui-kitten/components";
+import { StackScreenProps } from "@react-navigation/stack";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 //Styles
 import { styles } from "../theme/appTheme";
+//Components
 import { Background } from "../components/shared/Background";
 import { Logo } from "../components/shared/Logo";
 import {
@@ -12,32 +19,27 @@ import {
   EyeIcon,
   EyeOffIcon,
 } from "../components/shared/Icons";
-import {
-  ScrollView,
-  TouchableWithoutFeedback,
-} from "react-native-gesture-handler";
-import { KeyboardAvoidingView, View } from "react-native";
-
-interface ILoginFormProps {
-  username: string;
-  password: string;
-}
+//Constants
+import { INICIO_SCREEN } from "../constants/screens";
+//Models
+import { ILogin } from "../models/ILogin";
 
 const USERNAME = "username";
 const PASSWORD = "password";
 
-const ventaAgregarProductoValidationSchema: Yup.SchemaOf<ILoginFormProps> =
-  Yup.object({
-    username: Yup.string().required("Usuario requerido."),
-    password: Yup.string().required("Contraseña requerida."),
-  });
+const ventaAgregarProductoValidationSchema: Yup.SchemaOf<ILogin> = Yup.object({
+  username: Yup.string().required("Usuario requerido."),
+  password: Yup.string().required("Contraseña requerida."),
+});
 
-const initialValues: ILoginFormProps = {
+const initialValues: ILogin = {
   username: "",
   password: "",
 };
 
-export const LoginScreen = () => {
+interface Props extends StackScreenProps<any, any> {}
+
+export const LoginScreen = ({ navigation }: Props) => {
   const [securePasswordTextEntry, setSecurePasswordTextEntry] =
     useState<boolean>(true);
 
@@ -51,10 +53,11 @@ export const LoginScreen = () => {
     isValid,
     touched,
     setFieldTouched,
-  } = useFormik<ILoginFormProps>({
+  } = useFormik<ILogin>({
     initialValues: initialValues,
-    onSubmit: (model: ILoginFormProps) => {
+    onSubmit: (model: ILogin) => {
       console.log(model);
+      navigation.replace(INICIO_SCREEN);
     },
     validationSchema: ventaAgregarProductoValidationSchema,
   });
@@ -88,6 +91,7 @@ export const LoginScreen = () => {
             accessoryLeft={UserIcon}
             value={values.username}
             autoCapitalize="none"
+            autoCorrect={false}
             onChangeText={handleChange(USERNAME)}
             onBlur={() => setFieldTouched(USERNAME)}
             blurOnSubmit={false}
@@ -115,6 +119,7 @@ export const LoginScreen = () => {
             accessoryLeft={LockIcon}
             accessoryRight={renderPasswordVisibleIcon}
             value={values.password}
+            autoCorrect={false}
             autoCapitalize="none"
             secureTextEntry={securePasswordTextEntry}
             onChangeText={handleChange(PASSWORD)}

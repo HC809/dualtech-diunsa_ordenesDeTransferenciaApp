@@ -34,8 +34,8 @@ export const DrawerContent = ({
           size="giant"
           source={require("../../assets/diunsa_logo.png")}
         />
-        <Text style={styles.profileName} category="h6">
-          Ordenes de Transferencia
+        <Text status={"primary"} style={styles.profileName} category="s1">
+          Control Entradas y Salidas
         </Text>
       </View>
     </Layout>
@@ -49,7 +49,7 @@ export const DrawerContent = ({
         onSelect={(index) => navigation.navigate(state.routeNames[index.row])}
       >
         <DrawerItem title="Inicio" accessoryLeft={HomeIcon} />
-        <DrawerItem title="Entradas" accessoryLeft={ProductosIcon} />
+        <DrawerItem title="Entrada Producto" accessoryLeft={ProductosIcon} />
         <DrawerItem title="Configuración" accessoryLeft={ConfigIcon} />
       </Drawer>
     </SafeAreaView>
@@ -70,5 +70,7 @@ const styles = StyleSheet.create({
   },
   profileName: {
     marginHorizontal: 16,
+    fontWeight: "bold",
+    fontSize: 16,
   },
 });

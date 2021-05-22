@@ -3,7 +3,6 @@ import { StyleSheet, Dimensions } from "react-native";
 const window = Dimensions.get("window");
 
 export const styles = StyleSheet.create({
-  //#region General
   flex: {
     flex: 1,
   },
@@ -18,7 +17,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   backdrop: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
   },
   redBackdrop: {
     backgroundColor: "rgba(255, 0, 0, 0.3)",
@@ -54,25 +53,20 @@ export const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "space-between",
     paddingHorizontal: 10,
-    marginTop: 10,
+    marginTop: 50,
   },
-  //#endregion GENERAL
-  //#region MODALS
   modalContainer: {
     justifyContent: "center",
-    alignItems: "center",
     width: 256,
     minWidth: window.width - 70,
     padding: 15,
     borderRadius: 10,
+    marginBottom: 200,
   },
   modalButton: {
     marginHorizontal: 5,
     width: "45%",
   },
-  //#endregion MODALS
-
-  //#region FORMS
   formikInput: {
     paddingTop: 2,
   },
@@ -83,8 +77,6 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     color: "red",
   },
-  //#endregion FORMS
-
   textInput: {
     height: 40,
     width: "100%",

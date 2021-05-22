@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { DrawerScreenProps } from "@react-navigation/drawer";
@@ -43,6 +43,9 @@ export const EntradaScreen = ({ navigation }: Props) => {
     (state: RootState) => state.ui.submitLoading
   );
 
+  const [visibleModalIngresarNumeroOT, setVisibleModalIngresarNumeroOT] =
+    useState<boolean>(false);
+
   useEffect(() => {
     if (wasSuccessfull) {
       dispatch(finishSubmit(false));
@@ -58,11 +61,11 @@ export const EntradaScreen = ({ navigation }: Props) => {
     }
   }, [wasSuccessfull, navigation, dispatch]);
 
-  const handleCreateProducto = useCallback(
+  const handleEnviarEntrada = useCallback(
     (model: IEntrada) => {
       dispatch(finishSubmit(false));
       showMessage({
-        message: "Agregado correctamente!",
+        message: "Enviada correctamente!",
         type: "success",
         animated: true,
         floating: true,
@@ -78,25 +81,30 @@ export const EntradaScreen = ({ navigation }: Props) => {
   const renderLeftAction = () => <ToggleDrawerAction navigation={navigation} />;
 
   const renderRightActions = () => (
-    <Button size="small" appearance="outline">
-      Número OT
+    <Button
+      size="small"
+      appearance="outline"
+      onPress={() => setVisibleModalIngresarNumeroOT(true)}
+    >
+      Ingrese Número OT
     </Button>
   );
 
   return (
     <SafeAreaView style={styles.flex}>
       <TopNavigation
-        title={() => <ScreenTitle title="Nueva Entrada" />}
+        title={() => <ScreenTitle title="Entrada Producto" />}
         accessoryLeft={renderLeftAction}
         accessoryRight={renderRightActions}
       />
       <Divider style={styles.dividerColor} />
-      <Layout style={styles.flexLayout}>
-        <Layout></Layout>
+      <Layout style={styles.flex}>
         <EntradaForm
           initialValues={initialValues}
           loading={loading}
-          handleSubmit={handleCreateProducto}
+          handleFormikSubmit={handleEnviarEntrada}
+          visibleModalOT={visibleModalIngresarNumeroOT}
+          setVisibleModalOT={setVisibleModalIngresarNumeroOT}
         />
       </Layout>
     </SafeAreaView>

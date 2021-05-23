@@ -4,7 +4,7 @@ import { ILogin } from "../models/ILogin";
 //Models
 
 //URL AP
-axios.defaults.baseURL = "";
+axios.defaults.baseURL = "https://mipotrahn-admin-backend.herokuapp.com/api";
 
 axios.interceptors.response.use(undefined, (error) => {
   error?.message !== undefined
@@ -26,9 +26,9 @@ const requests = {
 };
 
 //Auth Endpoints
-const auth = {
+const fetchAuth = {
   login: ({ username, password }: ILogin): Promise<IApiResponse> =>
-    requests.post(`/controller/loginAction`, { username, password }),
+    requests.post(`/admiuser/auth`, { email: username, password }),
 };
 
-export { auth };
+export { fetchAuth };

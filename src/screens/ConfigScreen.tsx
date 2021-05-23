@@ -15,6 +15,8 @@ import { THEME_DARK, THEME_LIGHT } from "../constants/shared";
 import { RootState } from "../store/store";
 //Styles
 import { styles } from "../theme/appTheme";
+//Actions
+import { logout } from "../store/actions/auth/authActions";
 
 interface Props extends DrawerScreenProps<any, any> {}
 
@@ -45,6 +47,7 @@ export const ConfigScreen = ({ navigation }: Props) => {
             onChange={changeThemeMode}
           />
         </SettingSection>
+        <SettingSection hint="Cerrar Sesion" onPress={() => dispatch(logout)} />
       </Layout>
     </SafeAreaView>
   );

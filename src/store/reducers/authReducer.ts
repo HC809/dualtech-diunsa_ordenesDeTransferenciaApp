@@ -1,4 +1,5 @@
 import { IAuth } from "../../models/IAuth";
+import { AUTH, NOTAUTH } from "../../constants/shared";
 import {
   AuthActionTypes,
   LOGIN,
@@ -7,10 +8,6 @@ import {
   NOT_AUTH,
   LOGOUT,
 } from "../actions/auth/authActionTypes";
-
-const AUTH = "authenticated";
-const NOTAUTH = "not-authenticated";
-const CHECKING = "checking";
 
 const initialState: IAuth = {
   status: NOT_AUTH,

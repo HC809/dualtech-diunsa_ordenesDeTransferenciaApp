@@ -1,4 +1,5 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { KeyboardAvoidingView, View } from "react-native";
 import {
   ScrollView,
@@ -19,10 +20,17 @@ import {
   EyeIcon,
   EyeOffIcon,
 } from "../components/shared/Icons";
+import { LoadingButton } from "../components/shared/LoadingButton";
 //Constants
 import { INICIO_SCREEN } from "../constants/screens";
 //Models
 import { ILogin } from "../models/ILogin";
+import { ILoadingResponse } from "../models/shared/ILoadingResponse";
+//Actions
+import { startLogin } from "../store/actions/auth/authActions";
+import { finishSubmit } from "../store/actions/ui/loadingActions";
+//Store
+import { RootState } from "../store/store";
 
 const USERNAME = "username";
 const PASSWORD = "password";
@@ -40,6 +48,19 @@ const initialValues: ILogin = {
 interface Props extends StackScreenProps<any, any> {}
 
 export const LoginScreen = ({ navigation }: Props) => {
+  const dispatch = useDispatch();
+
+  const { loading, wasSuccessfull }: ILoadingResponse = useSelector(
+    (state: RootState) => state.ui.submitLoading
+  );
+
+  useEffect(() => {
+    if (wasSuccessfull) {
+      dispatch(finishSubmit(false));
+      navigation.replace(INICIO_SCREEN);
+    }
+  }, [wasSuccessfull, navigation, dispatch]);
+
   const [securePasswordTextEntry, setSecurePasswordTextEntry] =
     useState<boolean>(true);
 
@@ -56,7 +77,7 @@ export const LoginScreen = ({ navigation }: Props) => {
   } = useFormik<ILogin>({
     initialValues: initialValues,
     onSubmit: (model: ILogin) => {
-      console.log(model);
+      dispatch(startLogin(model));
       navigation.replace(INICIO_SCREEN);
     },
     validationSchema: ventaAgregarProductoValidationSchema,
@@ -99,6 +120,7 @@ export const LoginScreen = ({ navigation }: Props) => {
             onSubmitEditing={() => {
               passwordInput.current!.focus();
             }}
+            disabled={loading}
           />
           {touched.username && errors.username && (
             <Text
@@ -126,6 +148,7 @@ export const LoginScreen = ({ navigation }: Props) => {
             onBlur={() => setFieldTouched(PASSWORD)}
             returnKeyType="done"
             ref={passwordInput}
+            disabled={loading}
           />
           {touched.password && errors.password && (
             <Text
@@ -145,13 +168,17 @@ export const LoginScreen = ({ navigation }: Props) => {
       )} */}
 
           <View style={{ paddingVertical: 35 }}>
-            <Button
-              size="medium"
-              disabled={!isValid}
-              onPress={() => handleSubmit()}
-            >
-              Iniciar Sesión
-            </Button>
+            {!loading ? (
+              <Button
+                size="medium"
+                disabled={!isValid}
+                onPress={() => handleSubmit()}
+              >
+                Iniciar Sesión
+              </Button>
+            ) : (
+              <LoadingButton text={"Cargando"} status={"primary"} />
+            )}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

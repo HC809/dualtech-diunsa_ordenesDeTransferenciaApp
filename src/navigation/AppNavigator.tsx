@@ -27,13 +27,17 @@ import { ConfigScreen } from "../screens/ConfigScreen";
 import { EntradaScreen } from "../screens/EntradaScreen";
 //Drawer Content
 import { DrawerContent } from "./DrawerContent";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
+import { IAuth } from "../models/IAuth";
+import { AUTH } from "../constants/shared";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 
 //#region STACK NAVIGATORS
-const GeneralNavigator = () => (
+const AuthNavigator = () => (
   <Stack.Navigator headerMode="none" initialRouteName={LOGIN_SCREEN}>
     <Stack.Screen
       name={LOGIN_SCREEN}
@@ -42,18 +46,11 @@ const GeneralNavigator = () => (
         headerShown: false,
       }}
     />
-    <Stack.Screen
-      name={INICIO_SCREEN}
-      component={HomeScreen}
-      options={{
-        headerShown: false,
-      }}
-    />
   </Stack.Navigator>
 );
 
-const InicioNavigator = () => (
-  <Stack.Navigator headerMode="none" initialRouteName={INICIO_SCREEN}>
+const HomeNavigator = () => (
+  <Stack.Navigator headerMode="none" initialRouteName={LOGIN_SCREEN}>
     <Stack.Screen
       name={INICIO_SCREEN}
       component={HomeScreen}
@@ -99,19 +96,22 @@ const MyDrawerNavigator = () => {
       screenOptions={{ gestureEnabled: true }}
       drawerContent={(props) => <DrawerContent {...props} />}
     >
-      <Drawer.Screen name={INICIO_SCREEN} component={InicioNavigator} />
+      <Drawer.Screen name={INICIO_SCREEN} component={HomeNavigator} />
       <Drawer.Screen name={ENTRADAS_SCREEN} component={EntradaNavigator} />
       <Drawer.Screen name={CONFIG_SCREEN} component={ConfigNavigator} />
-      <Drawer.Screen name={LOGIN_SCREEN} component={GeneralNavigator} />
     </Drawer.Navigator>
   );
 };
 //#endregion DRAWER NAVIGATOR
 
 const AppNavigator = () => {
+  const { status: authStatus }: IAuth = useSelector(
+    (state: RootState) => state.auth
+  );
+
   return (
     <NavigationContainer>
-      <MyDrawerNavigator />
+      {authStatus === AUTH ? <MyDrawerNavigator /> : <AuthNavigator />}
     </NavigationContainer>
   );
 };

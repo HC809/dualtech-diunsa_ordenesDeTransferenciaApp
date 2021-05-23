@@ -22,15 +22,15 @@ if (__DEV__) {
 const composeEnhancers = composeWithDevTools({
   realtime: true,
   port: 8000,
-  hostname: "192.168.0.13", //add your computer's IP
+  hostname: "192.168.0.10", //add your computer's IP
 });
 
 const persistedReducer = persistReducer<any, any>(persistConfig, Reducers);
 
 const store = createStore(
   persistedReducer,
-  applyMiddleware(thunk)
-  //composeEnhancers(applyMiddleware(thunk))
+  //applyMiddleware(thunk)
+  composeEnhancers(applyMiddleware(thunk))
 );
 const persistor = persistStore(store);
 

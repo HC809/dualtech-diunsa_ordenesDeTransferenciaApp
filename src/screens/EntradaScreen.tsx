@@ -2,13 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { DrawerScreenProps } from "@react-navigation/drawer";
-import {
-  Layout,
-  TopNavigation,
-  Divider,
-  TopNavigationAction,
-  Button,
-} from "@ui-kitten/components";
+import { Layout, TopNavigation, Divider, Button } from "@ui-kitten/components";
 import { showMessage } from "react-native-flash-message";
 //Components
 import { ScreenTitle } from "../components/navigation/ScreenTitle";
@@ -63,16 +57,6 @@ export const EntradaScreen = ({ navigation }: Props) => {
 
   const handleEnviarEntrada = useCallback(
     (model: IEntrada) => {
-      dispatch(finishSubmit(false));
-      showMessage({
-        message: "Enviada correctamente!",
-        type: "success",
-        animated: true,
-        floating: true,
-        icon: "success",
-        backgroundColor: PRIMARY_COLOR_600,
-      });
-      navigation.goBack();
       //dispatch(startCreateProducto(model));
     },
     [dispatch]

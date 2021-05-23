@@ -1,3 +1,4 @@
+import { showMessage } from "react-native-flash-message";
 import { Dispatch } from "redux";
 //Api
 import { fetchAuth } from "../../../helpers/api";
@@ -15,8 +16,8 @@ import {
   LOGOUT,
 } from "./authActionTypes";
 
-const login = (token: string, user: string) => {
-  return { type: LOGIN, payload: { token, user } };
+const login = (token: string, user: string, name: string) => {
+  return { type: LOGIN, payload: { token, user, name } };
 };
 
 export const setErrorMsg = (msg: string) => {
@@ -41,15 +42,33 @@ export const startLogin = (model: ILogin) => {
 
     try {
       const response: IApiResponse = await fetchAuth.login(model);
-      console.log(response);
+
       if (response.ok) {
-        const { token, uid, name } = response.data;
-        dispatch(login(token, name));
-        dispatch(finishSubmit(true));
+        const { token, username, name } = response.data;
+        dispatch(finishSubmit(false));
+        dispatch(login(token, username, name));
+      } else {
+        showMessage({
+          message: response.errorMsg,
+          type: "danger",
+          position: "top",
+          animated: true,
+          floating: false,
+          icon: "warning",
+          duration: 6000,
+        });
       }
     } catch (e) {
       dispatch(finishSubmit(false));
-      return alert(e.response.data.errorMsg);
+      showMessage({
+        message: e,
+        type: "danger",
+        position: "top",
+        animated: true,
+        floating: false,
+        icon: "warning",
+        duration: 6000,
+      });
     }
   };
 };

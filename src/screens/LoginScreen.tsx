@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { KeyboardAvoidingView, View } from "react-native";
 import {
@@ -21,14 +21,11 @@ import {
   EyeOffIcon,
 } from "../components/shared/Icons";
 import { LoadingButton } from "../components/shared/LoadingButton";
-//Constants
-import { INICIO_SCREEN } from "../constants/screens";
 //Models
 import { ILogin } from "../models/ILogin";
 import { ILoadingResponse } from "../models/shared/ILoadingResponse";
 //Actions
 import { startLogin } from "../store/actions/auth/authActions";
-import { finishSubmit } from "../store/actions/ui/loadingActions";
 //Store
 import { RootState } from "../store/store";
 
@@ -50,16 +47,9 @@ interface Props extends StackScreenProps<any, any> {}
 export const LoginScreen = ({ navigation }: Props) => {
   const dispatch = useDispatch();
 
-  const { loading, wasSuccessfull }: ILoadingResponse = useSelector(
+  const { loading }: ILoadingResponse = useSelector(
     (state: RootState) => state.ui.submitLoading
   );
-
-  useEffect(() => {
-    if (wasSuccessfull) {
-      dispatch(finishSubmit(false));
-      navigation.replace(INICIO_SCREEN);
-    }
-  }, [wasSuccessfull, navigation, dispatch]);
 
   const [securePasswordTextEntry, setSecurePasswordTextEntry] =
     useState<boolean>(true);
@@ -78,7 +68,6 @@ export const LoginScreen = ({ navigation }: Props) => {
     initialValues: initialValues,
     onSubmit: (model: ILogin) => {
       dispatch(startLogin(model));
-      navigation.replace(INICIO_SCREEN);
     },
     validationSchema: ventaAgregarProductoValidationSchema,
   });
@@ -102,7 +91,7 @@ export const LoginScreen = ({ navigation }: Props) => {
         <Logo />
         <ScrollView style={styles.flexLayout}>
           <Text status="primary" style={styles.loginText}>
-            Ordenes de Transferencia
+            Control Entradas y Salidas
           </Text>
           <Text style={styles.inputLabel} category="s1" status="primary">
             Usuario
@@ -160,12 +149,6 @@ export const LoginScreen = ({ navigation }: Props) => {
               {errors.password}
             </Text>
           )}
-
-          {/* {!!errorMessage && (
-        <Text status="danger" style={styles.errorMessage}>
-          {errorMessage}
-        </Text>
-      )} */}
 
           <View style={{ paddingVertical: 35 }}>
             {!loading ? (

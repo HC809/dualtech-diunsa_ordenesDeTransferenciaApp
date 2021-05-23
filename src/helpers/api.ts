@@ -1,20 +1,10 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { IApiResponse } from "../models/shared/IApiResponse";
 import { ILogin } from "../models/ILogin";
 //Models
 
 //URL AP
 axios.defaults.baseURL = "https://mipotrahn-admin-backend.herokuapp.com/api";
-
-axios.interceptors.response.use(undefined, (error) => {
-  error?.message !== undefined
-    ? alert(
-        `Posible error de conexión al API.  ${JSON.stringify(error?.message)}`
-      )
-    : alert(
-        "Posible error de conexión al API. Verifique su conexión a intenet o comuníquese con un administrador para verificar la conexión del API."
-      );
-});
 
 const responseBody = (response: AxiosResponse) => response.data;
 
@@ -27,8 +17,37 @@ const requests = {
 
 //Auth Endpoints
 const fetchAuth = {
-  login: ({ username, password }: ILogin): Promise<IApiResponse> =>
-    requests.post(`/admiuser/auth`, { email: username, password }),
+  login: (model: ILogin): Promise<IApiResponse> =>
+    requests.post(`/users/authemticate`, {
+      Username: model.username,
+      Password: model.password,
+    }),
 };
 
-export { fetchAuth };
+//Entrada Endpoints
+const fetchEntrada = {
+  validarOT: (numeroOt: string): Promise<IApiResponse> =>
+    requests.post(`/receive/validateOT`, {
+      NumOT: numeroOt,
+    }),
+  getCantidadSugerida: (
+    numeroOt: string,
+    barcode: string
+  ): Promise<IApiResponse> =>
+    requests.post(`/receive/getQuantitySentByProduct`, {
+      NumOT: numeroOt,
+      Barcode: barcode,
+    }),
+  agregarProducto: (
+    numeroOt: string,
+    barcode: string,
+    cantidad: number
+  ): Promise<IApiResponse> =>
+    requests.post(`/receive/getQuantitySentByProduct`, {
+      NumOT: numeroOt,
+      Barcode: barcode,
+      Quantity: cantidad,
+    }),
+};
+
+export { fetchAuth, fetchEntrada };

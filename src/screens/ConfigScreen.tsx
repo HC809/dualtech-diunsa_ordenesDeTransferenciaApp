@@ -47,7 +47,10 @@ export const ConfigScreen = ({ navigation }: Props) => {
             onChange={changeThemeMode}
           />
         </SettingSection>
-        <SettingSection hint="Cerrar Sesion" onPress={() => dispatch(logout)} />
+        <SettingSection
+          hint="Cerrar Sesion"
+          onPress={() => dispatch(logout())}
+        />
       </Layout>
     </SafeAreaView>
   );

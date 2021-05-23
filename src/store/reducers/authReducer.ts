@@ -12,7 +12,8 @@ import {
 const initialState: IAuth = {
   status: NOT_AUTH,
   errorMessage: "",
-  user: null,
+  username: null,
+  name: null,
   token: null,
 };
 
@@ -23,7 +24,8 @@ const authReducer = (state = initialState, action: AuthActionTypes): IAuth => {
         ...state,
         status: AUTH,
         token: action.payload.token,
-        user: action.payload.user,
+        username: action.payload.username,
+        name: action.payload.name,
         errorMessage: "",
       };
 
@@ -32,7 +34,8 @@ const authReducer = (state = initialState, action: AuthActionTypes): IAuth => {
         ...state,
         errorMessage: action.payload,
         token: null,
-        user: null,
+        username: null,
+        name: null,
       };
 
     case REMOVE_ERROR:
@@ -43,11 +46,13 @@ const authReducer = (state = initialState, action: AuthActionTypes): IAuth => {
 
     case LOGOUT:
     case NOT_AUTH:
+      console.log(3);
       return {
         ...state,
         status: NOTAUTH,
         token: null,
-        user: null,
+        username: null,
+        name: null,
         errorMessage: "",
       };
 

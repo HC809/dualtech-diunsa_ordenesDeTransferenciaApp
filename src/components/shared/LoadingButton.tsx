@@ -15,7 +15,6 @@ interface Props {
 
 export const LoadingButton = ({ text, status }: Props) => (
   <Button
-    style={styles.button}
     appearance="outline"
     accessoryRight={LoadingIndicator}
     status={status}
@@ -28,9 +27,5 @@ const styles = StyleSheet.create({
   indicator: {
     justifyContent: "center",
     alignItems: "center",
-  },
-  button: {
-    margin: 2,
-    marginTop: 20,
   },
 });

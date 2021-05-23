@@ -8,7 +8,8 @@ type LoginAction = {
   type: typeof LOGIN;
   payload: {
     token: string;
-    user: string;
+    username: string;
+    name: string;
   };
 };
 

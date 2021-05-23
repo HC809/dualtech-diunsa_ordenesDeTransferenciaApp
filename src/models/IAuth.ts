@@ -2,5 +2,6 @@ export interface IAuth {
   status: string;
   token: string | null;
   errorMessage: string;
-  user: string | null;
+  username: string | null;
+  name: string | null;
 }

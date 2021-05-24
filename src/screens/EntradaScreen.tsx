@@ -13,8 +13,8 @@ import { styles } from "../theme/appTheme";
 //Models
 import { IEntrada } from "../models/IEntrada";
 import { ILoadingResponse } from "../models/shared/ILoadingResponse";
+import { IProducto } from "../models/IProducto";
 //Actions
-import { finishSubmit } from "../store/actions/ui/loadingActions";
 //Store
 import { RootState } from "../store/store";
 //Constants
@@ -40,27 +40,22 @@ export const EntradaScreen = ({ navigation }: Props) => {
   const [visibleModalIngresarNumeroOT, setVisibleModalIngresarNumeroOT] =
     useState<boolean>(false);
 
-  useEffect(() => {
-    if (wasSuccessfull) {
-      dispatch(finishSubmit(false));
-      showMessage({
-        message: "Agregado correctamente!",
-        type: "success",
-        animated: true,
-        floating: true,
-        icon: "success",
-        backgroundColor: PRIMARY_COLOR_600,
-      });
-      navigation.goBack();
-    }
-  }, [wasSuccessfull, navigation, dispatch]);
+  // useEffect(() => {
+  //   if (wasSuccessfull) {
+  //     dispatch(finishSubmit(false));
+  //     showMessage({
+  //       message: "Agregado correctamente!",
+  //       type: "success",
+  //       animated: true,
+  //       floating: true,
+  //       icon: "success",
+  //       backgroundColor: PRIMARY_COLOR_600,
+  //     });
+  //     navigation.goBack();
+  //   }
+  // }, [wasSuccessfull, navigation, dispatch]);
 
-  const handleEnviarEntrada = useCallback(
-    (model: IEntrada) => {
-      //dispatch(startCreateProducto(model));
-    },
-    [dispatch]
-  );
+  const handleEnviarEntrada = useCallback((model: IEntrada) => {}, [dispatch]);
 
   const renderLeftAction = () => <ToggleDrawerAction navigation={navigation} />;
 

@@ -9,4 +9,5 @@ export const CONFIG_SCREEN = "ConfigScreen";
 
 //#region ENTRADA
 export const ENTRADAS_SCREEN = "EntradaScreen";
+export const ENTRADAS_PRODUCTOS_SCREEN = "EntradaProductosScreen";
 //#endregion ENTRADA

@@ -13,8 +13,6 @@ import { THEME_LIGHT } from "./src/constants/shared";
 import { RootState } from "./src/store/store";
 //Navigator
 import AppNavigator from "./src/navigation/AppNavigator";
-//Components
-import { SyncIndicator } from "./src/components/shared/SyncIndicator";
 //FlashMessage
 import FlashMessage from "react-native-flash-message";
 
@@ -35,7 +33,6 @@ const AppConnected = () => {
       >
         <SafeAreaProvider>
           <>
-            <SyncIndicator area="l-cc" />
             <AppNavigator />
             <FlashMessage position="top" />
           </>

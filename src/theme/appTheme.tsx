@@ -92,4 +92,9 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
     paddingVertical: 10,
   },
+  removeListItemButton: {
+    position: "absolute",
+    top: -20,
+    right: -30,
+  },
 });

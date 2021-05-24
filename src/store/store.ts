@@ -3,11 +3,13 @@ import { combineReducers } from "redux";
 //Reducers
 import configReducer from "./reducers/configReducer";
 import authReducer from "./reducers/authReducer";
+import productosReducer from "./reducers/productosReducer";
 import uiReducer from "./reducers/uiReducer";
 
 const Reducers = combineReducers({
   config: configReducer,
   auth: authReducer,
+  productosEntrada: productosReducer,
   ui: uiReducer,
 });
 

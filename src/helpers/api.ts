@@ -4,7 +4,7 @@ import { ILogin } from "../models/ILogin";
 //Models
 
 //URL AP
-axios.defaults.baseURL = "https://mipotrahn-admin-backend.herokuapp.com/api";
+axios.defaults.baseURL = "http://172.40.20.181:7011/api";
 
 const responseBody = (response: AxiosResponse) => response.data;
 
@@ -18,7 +18,7 @@ const requests = {
 //Auth Endpoints
 const fetchAuth = {
   login: (model: ILogin): Promise<IApiResponse> =>
-    requests.post(`/users/authemticate`, {
+    requests.post(`/users/authenticate`, {
       Username: model.username,
       Password: model.password,
     }),
@@ -26,10 +26,8 @@ const fetchAuth = {
 
 //Entrada Endpoints
 const fetchEntrada = {
-  validarOT: (numeroOt: string): Promise<IApiResponse> =>
-    requests.post(`/receive/validateOT`, {
-      NumOT: numeroOt,
-    }),
+  validarOT: (NumOT: string): Promise<IApiResponse> =>
+    requests.get(`/Receive/ValidateOT/${NumOT}`),
   getCantidadSugerida: (
     numeroOt: string,
     barcode: string

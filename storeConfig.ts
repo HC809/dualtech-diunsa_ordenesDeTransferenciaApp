@@ -22,7 +22,8 @@ if (__DEV__) {
 const composeEnhancers = composeWithDevTools({
   realtime: true,
   port: 8000,
-  hostname: "192.168.0.10", //add your computer's IP
+  hostname: "172.30.31.97",
+  //hostname: "192.168.0.10", //add your computer's IP
 });
 
 const persistedReducer = persistReducer<any, any>(persistConfig, Reducers);

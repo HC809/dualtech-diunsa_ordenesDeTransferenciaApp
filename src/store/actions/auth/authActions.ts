@@ -48,27 +48,31 @@ export const startLogin = (model: ILogin) => {
         dispatch(finishSubmit(false));
         dispatch(login(token, username, name));
       } else {
-        showMessage({
-          message: response.errorMsg,
-          type: "danger",
-          position: "top",
-          animated: true,
-          floating: false,
-          icon: "warning",
-          duration: 6000,
-        });
+        dispatch(finishSubmit(false));
+        alert(response.errorMsg);
+        // showMessage({
+        //   message: response.errorMsg,
+        //   type: "danger",
+        //   position: "top",
+        //   animated: true,
+        //   floating: false,
+        //   icon: "warning",
+        //   duration: 6000,
+        // });
       }
     } catch (e) {
       dispatch(finishSubmit(false));
-      showMessage({
-        message: e,
-        type: "danger",
-        position: "top",
-        animated: true,
-        floating: false,
-        icon: "warning",
-        duration: 6000,
-      });
+      console.log(e.response);
+      alert(e);
+      // showMessage({
+      //   message: e,
+      //   type: "danger",
+      //   position: "top",
+      //   animated: true,
+      //   floating: false,
+      //   icon: "warning",
+      //   duration: 6000,
+      // });
     }
   };
 };

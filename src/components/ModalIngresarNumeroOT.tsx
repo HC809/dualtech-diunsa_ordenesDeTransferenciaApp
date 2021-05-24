@@ -4,8 +4,11 @@ import { Layout, Text, Input, Button, Divider } from "@ui-kitten/components";
 import { View } from "react-native";
 import { Formik, FormikProps } from "formik";
 import * as Yup from "yup";
+import { showMessage } from "react-native-flash-message";
 //Styles
 import { styles } from "../theme/appTheme";
+import { fetchEntrada } from "../helpers/api";
+import { IApiResponse } from "../models/shared/IApiResponse";
 
 export interface IIngresarOTForm {
   numeroOT: string;
@@ -50,9 +53,41 @@ export const ModalIngresarNumeroOT = ({
         <Formik
           validationSchema={ingresarOTValidationSchema}
           initialValues={initialValues}
-          onSubmit={(model: IIngresarOTForm) => {
+          onSubmit={async (model: IIngresarOTForm) => {
             setVisibleModal(false);
             setFormikFieldValue(numeroOTConstant, model.numeroOT);
+            // try {
+            //   const response: IApiResponse = await fetchEntrada.validarOT(
+            //     model.numeroOT
+            //   );
+
+            //   if (response.ok) {
+            //     setVisibleModal(false);
+            //     setFormikFieldValue(numeroOTConstant, model.numeroOT);
+            //   } else {
+            //     showMessage({
+            //       message: response.errorMsg,
+            //       type: "danger",
+            //       position: "top",
+            //       animated: true,
+            //       floating: false,
+            //       icon: "warning",
+            //       duration: 6000,
+            //     });
+            //   }
+            // } catch (error) {
+            //   console.log(error.response);
+            //   alert(error);
+            //   // showMessage({
+            //   //   message: error,
+            //   //   type: "danger",
+            //   //   position: "top",
+            //   //   animated: true,
+            //   //   floating: false,
+            //   //   icon: "warning",
+            //   //   duration: 6000,
+            //   // });
+            // }
           }}
         >
           {(props: FormikProps<IIngresarOTForm>) => {

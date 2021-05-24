@@ -6,5 +6,7 @@ export interface ILoadingResponse {
 
 export interface IUILoading {
   submitLoading: ILoadingResponse;
+  validarvalidateOTLoading: ILoadingResponse;
+  cantidadSugeridaLoading: ILoadingResponse;
   deleteLoading: ILoadingResponse;
 }

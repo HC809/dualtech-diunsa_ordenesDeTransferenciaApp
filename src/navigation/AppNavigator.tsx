@@ -1,5 +1,6 @@
 import "react-native-gesture-handler";
 import React from "react";
+import { useSelector } from "react-redux";
 import { useWindowDimensions } from "react-native";
 import {
   BottomNavigation,
@@ -12,29 +13,54 @@ import {
   createStackNavigator,
 } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import {
+  createBottomTabNavigator,
+  BottomTabBarOptions,
+  BottomTabBarProps,
+} from "@react-navigation/bottom-tabs";
 //Constants
 import {
   LOGIN_SCREEN,
   INICIO_SCREEN,
   CONFIG_SCREEN,
   ENTRADAS_SCREEN,
+  ENTRADAS_PRODUCTOS_SCREEN,
 } from "../constants/screens";
+import { AUTH } from "../constants/shared";
 //Screens
 import { LoginScreen } from "../screens/LoginScreen";
 import { HomeScreen } from "../screens/HomeScreen";
 import { ConfigScreen } from "../screens/ConfigScreen";
 import { EntradaScreen } from "../screens/EntradaScreen";
+import { EntradaProductosScreen } from "../screens/EntradaProductosScreen";
 //Drawer Content
 import { DrawerContent } from "./DrawerContent";
-import { useSelector } from "react-redux";
+//Store
 import { RootState } from "../store/store";
+//Models
 import { IAuth } from "../models/IAuth";
-import { AUTH } from "../constants/shared";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
+
+const EntradaBottomTabBar = (props: BottomTabBarProps<BottomTabBarOptions>) => (
+  <BottomNavigation
+    selectedIndex={props.state.index}
+    onSelect={(index) =>
+      props.navigation.navigate(props.state.routeNames[index])
+    }
+  >
+    <BottomNavigationTab
+      title="OT"
+      icon={(p) => <Icon {...p} name="list-outline" />}
+    />
+    <BottomNavigationTab
+      title="Productos"
+      icon={(p) => <Icon {...p} name="list-outline" />}
+    />
+  </BottomNavigation>
+);
 
 //#region STACK NAVIGATORS
 const AuthNavigator = () => (
@@ -62,15 +88,13 @@ const HomeNavigator = () => (
 );
 
 const EntradaNavigator = () => (
-  <Stack.Navigator headerMode="none" initialRouteName={ENTRADAS_SCREEN}>
-    <Stack.Screen
-      name={ENTRADAS_SCREEN}
-      component={EntradaScreen}
-      options={{
-        headerShown: false,
-      }}
+  <Tab.Navigator tabBar={(props) => <EntradaBottomTabBar {...props} />}>
+    <Tab.Screen name={ENTRADAS_SCREEN} component={EntradaScreen} />
+    <Tab.Screen
+      name={ENTRADAS_PRODUCTOS_SCREEN}
+      component={EntradaProductosScreen}
     />
-  </Stack.Navigator>
+  </Tab.Navigator>
 );
 
 const ConfigNavigator = () => (

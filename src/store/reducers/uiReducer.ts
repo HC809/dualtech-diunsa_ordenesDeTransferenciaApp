@@ -18,6 +18,8 @@ const initialLoadingState: ILoadingResponse = {
 
 const initialState: IUILoading = {
   submitLoading: initialLoadingState,
+  validarvalidateOTLoading: initialLoadingState,
+  cantidadSugeridaLoading: initialLoadingState,
   deleteLoading: initialLoadingState,
 };
 

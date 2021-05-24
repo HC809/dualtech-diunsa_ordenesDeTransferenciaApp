@@ -52,11 +52,11 @@ const EntradaBottomTabBar = (props: BottomTabBarProps<BottomTabBarOptions>) => (
     }
   >
     <BottomNavigationTab
-      title="OT"
-      icon={(p) => <Icon {...p} name="list-outline" />}
+      title="Agregar Producto"
+      icon={(p) => <Icon {...p} name="plus-circle-outline" />}
     />
     <BottomNavigationTab
-      title="Productos"
+      title="Lista Productos"
       icon={(p) => <Icon {...p} name="list-outline" />}
     />
   </BottomNavigation>
@@ -75,17 +75,17 @@ const AuthNavigator = () => (
   </Stack.Navigator>
 );
 
-const HomeNavigator = () => (
-  <Stack.Navigator headerMode="none" initialRouteName={LOGIN_SCREEN}>
-    <Stack.Screen
-      name={INICIO_SCREEN}
-      component={HomeScreen}
-      options={{
-        headerShown: false,
-      }}
-    />
-  </Stack.Navigator>
-);
+// const HomeNavigator = () => (
+//   <Stack.Navigator headerMode="none" initialRouteName={LOGIN_SCREEN}>
+//     <Stack.Screen
+//       name={INICIO_SCREEN}
+//       component={HomeScreen}
+//       options={{
+//         headerShown: false,
+//       }}
+//     />
+//   </Stack.Navigator>
+// );
 
 const EntradaNavigator = () => (
   <Tab.Navigator tabBar={(props) => <EntradaBottomTabBar {...props} />}>
@@ -120,7 +120,7 @@ const MyDrawerNavigator = () => {
       screenOptions={{ gestureEnabled: true }}
       drawerContent={(props) => <DrawerContent {...props} />}
     >
-      <Drawer.Screen name={INICIO_SCREEN} component={HomeNavigator} />
+      {/* <Drawer.Screen name={INICIO_SCREEN} component={HomeNavigator} /> */}
       <Drawer.Screen name={ENTRADAS_SCREEN} component={EntradaNavigator} />
       <Drawer.Screen name={CONFIG_SCREEN} component={ConfigNavigator} />
     </Drawer.Navigator>

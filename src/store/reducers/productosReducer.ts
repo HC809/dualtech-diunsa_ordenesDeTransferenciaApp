@@ -2,6 +2,7 @@ import {
   ProductosActionTypes,
   ADD_PRODUCTO,
   DELETE_PRODUCTO,
+  SET_PRODUCTOS,
 } from "../actions/productos/productoActionsTypes";
 import { IProducto } from "../../models/IProducto";
 
@@ -17,6 +18,9 @@ const productosReducer = (
 
     case DELETE_PRODUCTO:
       return state.filter((p) => p.id !== action.payload);
+
+    case SET_PRODUCTOS:
+      return [];
 
     default:
       return state;

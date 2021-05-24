@@ -1,4 +1,4 @@
-import { showMessage } from "react-native-flash-message";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Dispatch } from "redux";
 //Api
 import { fetchAuth } from "../../../helpers/api";
@@ -15,9 +15,10 @@ import {
   NOT_AUTH,
   LOGOUT,
 } from "./authActionTypes";
+import { Alert } from "react-native";
 
-const login = (token: string, user: string, name: string) => {
-  return { type: LOGIN, payload: { token, user, name } };
+const login = (token: string, username: string, name: string) => {
+  return { type: LOGIN, payload: { token, username, name } };
 };
 
 export const setErrorMsg = (msg: string) => {
@@ -42,37 +43,27 @@ export const startLogin = (model: ILogin) => {
 
     try {
       const response: IApiResponse = await fetchAuth.login(model);
-
+      console.log(response.data);
       if (response.ok) {
         const { token, username, name } = response.data;
+        await AsyncStorage.setItem("token", token);
         dispatch(finishSubmit(false));
         dispatch(login(token, username, name));
       } else {
         dispatch(finishSubmit(false));
-        alert(response.errorMsg);
-        // showMessage({
-        //   message: response.errorMsg,
-        //   type: "danger",
-        //   position: "top",
-        //   animated: true,
-        //   floating: false,
-        //   icon: "warning",
-        //   duration: 6000,
-        // });
+        Alert.alert("Error", response.errorMsg, [
+          {
+            text: "Ok",
+          },
+        ]);
       }
     } catch (e) {
       dispatch(finishSubmit(false));
-      console.log(e.response);
-      alert(e);
-      // showMessage({
-      //   message: e,
-      //   type: "danger",
-      //   position: "top",
-      //   animated: true,
-      //   floating: false,
-      //   icon: "warning",
-      //   duration: 6000,
-      // });
+      Alert.alert("API Error", "Request failed with status code 404", [
+        {
+          text: "Ok",
+        },
+      ]);
     }
   };
 };

@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+
 import { SafeAreaView } from "react-native-safe-area-context";
 import { DrawerScreenProps } from "@react-navigation/drawer";
 import { Layout, TopNavigation, Divider, Button } from "@ui-kitten/components";
-import { showMessage } from "react-native-flash-message";
+
 //Components
 import { ScreenTitle } from "../components/navigation/ScreenTitle";
 import { ToggleDrawerAction } from "../components/navigation/ToggleDrawerAction";
@@ -12,13 +12,6 @@ import { EntradaForm } from "../components/EntradaForm";
 import { styles } from "../theme/appTheme";
 //Models
 import { IEntrada } from "../models/IEntrada";
-import { ILoadingResponse } from "../models/shared/ILoadingResponse";
-import { IProducto } from "../models/IProducto";
-//Actions
-//Store
-import { RootState } from "../store/store";
-//Constants
-import { PRIMARY_COLOR_600 } from "../constants/shared";
 
 interface Props extends DrawerScreenProps<any, any> {}
 
@@ -31,31 +24,8 @@ const initialValues: IEntrada = {
 //#endregion INITIAL VALUES
 
 export const EntradaScreen = ({ navigation }: Props) => {
-  const dispatch = useDispatch();
-
-  const { loading, wasSuccessfull }: ILoadingResponse = useSelector(
-    (state: RootState) => state.ui.submitLoading
-  );
-
   const [visibleModalIngresarNumeroOT, setVisibleModalIngresarNumeroOT] =
     useState<boolean>(false);
-
-  // useEffect(() => {
-  //   if (wasSuccessfull) {
-  //     dispatch(finishSubmit(false));
-  //     showMessage({
-  //       message: "Agregado correctamente!",
-  //       type: "success",
-  //       animated: true,
-  //       floating: true,
-  //       icon: "success",
-  //       backgroundColor: PRIMARY_COLOR_600,
-  //     });
-  //     navigation.goBack();
-  //   }
-  // }, [wasSuccessfull, navigation, dispatch]);
-
-  const handleEnviarEntrada = useCallback((model: IEntrada) => {}, [dispatch]);
 
   const renderLeftAction = () => <ToggleDrawerAction navigation={navigation} />;
 
@@ -80,8 +50,6 @@ export const EntradaScreen = ({ navigation }: Props) => {
       <Layout style={styles.flex}>
         <EntradaForm
           initialValues={initialValues}
-          loading={loading}
-          handleFormikSubmit={handleEnviarEntrada}
           visibleModalOT={visibleModalIngresarNumeroOT}
           setVisibleModalOT={setVisibleModalIngresarNumeroOT}
         />

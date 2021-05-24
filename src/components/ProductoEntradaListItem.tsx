@@ -36,7 +36,7 @@ export const ProductoEntradaListItem = React.memo(
         )}
       >
         <View style={styles.headerItemRowView}>
-          <Text category="s1">{producto.Name}</Text>
+          <Text category="s1">{producto.Name || "Nombre no definido"}</Text>
           <Button
             style={styles.removeListItemButton}
             appearance="ghost"

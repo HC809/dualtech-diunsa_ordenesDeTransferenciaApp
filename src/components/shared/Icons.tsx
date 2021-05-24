@@ -36,3 +36,7 @@ export const ProductosIcon = (props: IconProps): IconElement => (
 export const TrashsIcon = (props: IconProps): IconElement => (
   <Icon {...props} name={"trash-outline"} />
 );
+
+export const SendIcon = (props: IconProps): IconElement => (
+  <Icon {...props} name={"upload-outline"} />
+);

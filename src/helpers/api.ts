@@ -1,12 +1,24 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IApiResponse } from "../models/shared/IApiResponse";
 import { ILogin } from "../models/ILogin";
+import { IProducto } from "../models/IProducto";
 //Models
 
 //URL AP
 axios.defaults.baseURL = "http://172.40.20.181:7011/api";
 
 const responseBody = (response: AxiosResponse) => response.data;
+
+axios.interceptors.request.use(async (config) => {
+  const token = await AsyncStorage.getItem("token");
+  if (token) {
+    config.headers = {
+      Authorization: `Bearer ${token}`,
+    };
+  }
+  return config;
+});
 
 const requests = {
   get: (url: string) => axios.get(url).then(responseBody),
@@ -27,25 +39,20 @@ const fetchAuth = {
 //Entrada Endpoints
 const fetchEntrada = {
   validarOT: (NumOT: string): Promise<IApiResponse> =>
-    requests.get(`/Receive/ValidateOT/${NumOT}`),
+    requests.get(`/receive/validateOT/${NumOT}`),
   getCantidadSugerida: (
     numeroOt: string,
     barcode: string
   ): Promise<IApiResponse> =>
-    requests.post(`/receive/getQuantitySentByProduct`, {
+    requests.post(`/receive/getBarcodeInformation`, {
       NumOT: numeroOt,
       Barcode: barcode,
     }),
-  agregarProducto: (
-    numeroOt: string,
-    barcode: string,
-    cantidad: number
+  agregarListaProducto: (
+    productos: IProducto[],
+    numeroOt: string
   ): Promise<IApiResponse> =>
-    requests.post(`/receive/getQuantitySentByProduct`, {
-      NumOT: numeroOt,
-      Barcode: barcode,
-      Quantity: cantidad,
-    }),
+    requests.post(`/receive/postReceiveOrder/${numeroOt}`, productos),
 };
 
 export { fetchAuth, fetchEntrada };

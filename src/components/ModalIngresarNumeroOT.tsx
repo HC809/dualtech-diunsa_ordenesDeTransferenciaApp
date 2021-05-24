@@ -1,10 +1,10 @@
 import React, { Dispatch, SetStateAction } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from "react-native-gesture-handler";
 import { Layout, Text, Input, Button, Divider } from "@ui-kitten/components";
-import { View } from "react-native";
+import { Alert, View } from "react-native";
 import { Formik, FormikProps } from "formik";
 import * as Yup from "yup";
-import { showMessage } from "react-native-flash-message";
 //Styles
 import { styles } from "../theme/appTheme";
 import { fetchEntrada } from "../helpers/api";
@@ -54,40 +54,29 @@ export const ModalIngresarNumeroOT = ({
           validationSchema={ingresarOTValidationSchema}
           initialValues={initialValues}
           onSubmit={async (model: IIngresarOTForm) => {
-            setVisibleModal(false);
-            setFormikFieldValue(numeroOTConstant, model.numeroOT);
-            // try {
-            //   const response: IApiResponse = await fetchEntrada.validarOT(
-            //     model.numeroOT
-            //   );
+            try {
+              const response: IApiResponse = await fetchEntrada.validarOT(
+                model.numeroOT
+              );
 
-            //   if (response.ok) {
-            //     setVisibleModal(false);
-            //     setFormikFieldValue(numeroOTConstant, model.numeroOT);
-            //   } else {
-            //     showMessage({
-            //       message: response.errorMsg,
-            //       type: "danger",
-            //       position: "top",
-            //       animated: true,
-            //       floating: false,
-            //       icon: "warning",
-            //       duration: 6000,
-            //     });
-            //   }
-            // } catch (error) {
-            //   console.log(error.response);
-            //   alert(error);
-            //   // showMessage({
-            //   //   message: error,
-            //   //   type: "danger",
-            //   //   position: "top",
-            //   //   animated: true,
-            //   //   floating: false,
-            //   //   icon: "warning",
-            //   //   duration: 6000,
-            //   // });
-            // }
+              if (response.ok) {
+                await AsyncStorage.setItem("numeroOT", model.numeroOT);
+                setVisibleModal(false);
+                setFormikFieldValue(numeroOTConstant, model.numeroOT);
+              } else {
+                Alert.alert("No Válido", response.errorMsg, [
+                  {
+                    text: "Ok",
+                  },
+                ]);
+              }
+            } catch (error) {
+              Alert.alert("API Error", "Request failed with status code 404", [
+                {
+                  text: "Ok",
+                },
+              ]);
+            }
           }}
         >
           {(props: FormikProps<IIngresarOTForm>) => {
@@ -95,7 +84,6 @@ export const ModalIngresarNumeroOT = ({
               values,
               errors,
               handleSubmit,
-              setFieldValue,
               handleChange,
               handleBlur,
               isValid,

@@ -13,6 +13,7 @@ import {
   DrawerItem,
   Layout,
   Text,
+  Divider,
 } from "@ui-kitten/components";
 //Icons
 import {
@@ -41,14 +42,24 @@ export const DrawerContent = ({
     </Layout>
   );
 
+  const renderFooter = () => (
+    <React.Fragment>
+      <Divider style={{ backgroundColor: "#1160A3" }} />
+      <Text style={{ padding: 10 }} appearance="hint">
+        Versión 1.0.0
+      </Text>
+    </React.Fragment>
+  );
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Drawer
         header={renderHeader}
         selectedIndex={new IndexPath(state.index)}
         onSelect={(index) => navigation.navigate(state.routeNames[index.row])}
+        footer={renderFooter}
       >
-        <DrawerItem title="Inicio" accessoryLeft={HomeIcon} />
+        {/* <DrawerItem title="Inicio" accessoryLeft={HomeIcon} /> */}
         <DrawerItem title="Entrada Producto" accessoryLeft={ProductosIcon} />
         <DrawerItem title="Configuración" accessoryLeft={ConfigIcon} />
       </Drawer>

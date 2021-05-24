@@ -46,7 +46,6 @@ const authReducer = (state = initialState, action: AuthActionTypes): IAuth => {
 
     case LOGOUT:
     case NOT_AUTH:
-      console.log(3);
       return {
         ...state,
         status: NOTAUTH,

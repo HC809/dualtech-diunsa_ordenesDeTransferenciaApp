@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
-import { View } from "react-native";
+import { Alert, View } from "react-native";
 import { Input, Button, Layout, Text, Modal } from "@ui-kitten/components";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -29,11 +29,11 @@ import { startAddProducto } from "../store/actions/productos/productosActions";
 import { finishSubmit } from "../store/actions/ui/loadingActions";
 //Store
 import { RootState } from "../store/store";
+import { fetchEntrada } from "../helpers/api";
+import { IApiResponse } from "../models/shared/IApiResponse";
 
 interface FormProps {
   initialValues: IEntrada;
-  loading: boolean;
-  handleFormikSubmit: (model: IEntrada) => any; // accion submit (create/update)
   visibleModalOT: boolean;
   setVisibleModalOT: Dispatch<SetStateAction<boolean>>;
 }
@@ -60,14 +60,11 @@ const entradaValidationSchema: Yup.SchemaOf<IEntrada> = Yup.object({
 //#endregion VALIDATION SHEMA
 
 export const EntradaForm = React.memo(
-  ({
-    initialValues,
-    handleFormikSubmit,
-    loading: principalLoading,
-    visibleModalOT,
-    setVisibleModalOT,
-  }: FormProps) => {
+  ({ initialValues, visibleModalOT, setVisibleModalOT }: FormProps) => {
     const dispatch = useDispatch();
+
+    const [nombreProducto, setNombreProducto] = useState<string>("");
+    const [cantidadSugerida, setCantidadSugerida] = useState<number>(0);
 
     const { loading, wasSuccessfull }: ILoadingResponse = useSelector(
       (state: RootState) => state.ui.submitLoading
@@ -110,7 +107,7 @@ export const EntradaForm = React.memo(
             id: uuidv4(),
             Barcode: model.codigoBarra.trim(),
             Quantity: Number(model.cantidad),
-            Name: "Producto Nombre",
+            Name: nombreProducto,
           })
         );
       },
@@ -143,13 +140,49 @@ export const EntradaForm = React.memo(
           <Input
             style={styles.formikInput}
             placeholder="Código de barra"
+            caption={`Producto: ${nombreProducto}`}
             value={values.codigoBarra}
             onChangeText={handleChange(CODIGO_BARRA)}
             onBlur={handleBlur(CODIGO_BARRA)}
             returnKeyType="next"
             ref={codigoBarraInput}
-            onSubmitEditing={() => {
-              cantidadInput.current!.focus();
+            onSubmitEditing={async () => {
+              console.log(values.numeroOT);
+              console.log(values.codigoBarra);
+              try {
+                const response: IApiResponse =
+                  await fetchEntrada.getCantidadSugerida(
+                    values.numeroOT,
+                    values.codigoBarra
+                  );
+                const { quantity, name } = response.data;
+                if (response.ok) {
+                  setNombreProducto(name);
+                  setCantidadSugerida(quantity);
+                  setFieldValue(CANTIDAD, quantity);
+                  cantidadInput.current!.focus();
+                } else {
+                  setNombreProducto("");
+                  setCantidadSugerida(0);
+                  Alert.alert("No encontrado", response.errorMsg, [
+                    {
+                      text: "Ok",
+                    },
+                  ]);
+                }
+              } catch (error) {
+                setNombreProducto("");
+                setCantidadSugerida(0);
+                Alert.alert(
+                  "API Error",
+                  "Request failed with status code 404",
+                  [
+                    {
+                      text: "Ok",
+                    },
+                  ]
+                );
+              }
             }}
             disabled={loading}
           />
@@ -173,6 +206,7 @@ export const EntradaForm = React.memo(
           <Input
             style={styles.formikInput}
             placeholder="Cantidad de producto"
+            caption={`Cantidad sugerida: ${cantidadSugerida}`}
             value={values.cantidad?.toString().replace(/[. ]/g, "")}
             onChangeText={handleChange(CANTIDAD)}
             onBlur={handleBlur(CANTIDAD)}

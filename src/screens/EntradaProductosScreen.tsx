@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { useSelector } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch, useSelector } from "react-redux";
 import { View, ListRenderItemInfo } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StackScreenProps } from "@react-navigation/stack";
@@ -8,29 +9,53 @@ import {
   Text,
   TopNavigation,
   Divider,
-  TopNavigationAction,
   List,
+  Button,
 } from "@ui-kitten/components";
+import { showMessage } from "react-native-flash-message";
 //Components
 import { ScreenTitle } from "../components/navigation/ScreenTitle";
 import { ProductoEntradaListItem } from "../components/ProductoEntradaListItem";
-import { ToggleDrawerAction } from "../components/navigation/ToggleDrawerAction";
 import { SearchBar } from "../components/shared/SearchBar";
 //Styles
 import { styles } from "../theme/appTheme";
-//Icons
-import { UserIcon } from "../components/shared/Icons";
 //Models
 import { IProducto } from "../models/IProducto";
 //Store
 import { RootState } from "../store/store";
+import { SendIcon } from "../components/shared/Icons";
+import { ILoadingResponse } from "../models/shared/ILoadingResponse";
+import { finishSubmit } from "../store/actions/ui/loadingActions";
+import { PRIMARY_COLOR_600 } from "../constants/shared";
+import { LoadingButton } from "../components/shared/LoadingButton";
+import { startSendProductos } from "../store/actions/productos/productosActions";
 
 interface Props extends StackScreenProps<any, any> {}
 
 export const EntradaProductosScreen = ({ navigation }: Props) => {
+  const dispatch = useDispatch();
+
   const productosEntrada: IProducto[] = useSelector(
     (state: RootState) => state.productosEntrada
   );
+
+  const { loading, wasSuccessfull }: ILoadingResponse = useSelector(
+    (state: RootState) => state.ui.submitLoading
+  );
+
+  useEffect(() => {
+    if (wasSuccessfull) {
+      dispatch(finishSubmit(false));
+      showMessage({
+        message: "Productos enviados correctamente!",
+        type: "success",
+        animated: true,
+        floating: true,
+        icon: "success",
+        backgroundColor: PRIMARY_COLOR_600,
+      });
+    }
+  }, [wasSuccessfull, dispatch]);
 
   const [searchTextProducto, setSearchTextProducto] = useState<string>("");
   const [productosEntradaList, setProductosEntradaList] =
@@ -73,7 +98,25 @@ export const EntradaProductosScreen = ({ navigation }: Props) => {
           keyExtractor={(item: IProducto) => item.id}
           style={styles.flex}
           contentContainerStyle={styles.paddingListItem}
-          ListHeaderComponent={<></>}
+          ListHeaderComponent={
+            <View style={{ padding: 10 }}>
+              {loading ? (
+                <LoadingButton text={"Enviando"} status={"primary"} />
+              ) : (
+                <Button
+                  accessoryLeft={SendIcon}
+                  onPress={async () => {
+                    const numeroOT = await AsyncStorage.getItem("numeroOT");
+                    dispatch(startSendProductos(productosEntrada, numeroOT!));
+                  }}
+                  status="primary"
+                  disabled={loading}
+                >
+                  Enviar Productos
+                </Button>
+              )}
+            </View>
+          }
           ListEmptyComponent={() => (
             <View style={styles.centerLayout}>
               <Text appearance="hint" category="s1">

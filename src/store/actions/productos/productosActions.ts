@@ -52,7 +52,6 @@ export const startSendProductos = (
         productos,
         numeroOT
       );
-      console.log(response);
       if (response.ok) {
         dispatch(setProductos());
         dispatch(finishSubmit(true));

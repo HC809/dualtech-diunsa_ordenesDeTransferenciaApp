@@ -83,7 +83,7 @@ export const EntradaForm = React.memo(
           icon: "success",
           backgroundColor: PRIMARY_COLOR_600,
         });
-        codigoBarraInput.current?.focus();
+        //codigoBarraInput.current?.focus();
       }
     }, [wasSuccessfull, dispatch]);
 
@@ -219,19 +219,20 @@ export const EntradaForm = React.memo(
             <Text style={styles.errorText}>{errors.cantidad}</Text>
           )}
 
-          {loading ? (
-            <LoadingButton text={"Agregando"} status={"primary"} />
-          ) : (
-            <Button
-              style={{ marginTop: 30 }}
-              onPress={handleSubmit as (values: any) => void}
-              disabled={!isValid}
-              status="primary"
-              size="medium"
-            >
-              Agregar
-            </Button>
-          )}
+          <View style={{ marginTop: 30 }}>
+            {loading ? (
+              <LoadingButton text={"Agregando"} status={"primary"} />
+            ) : (
+              <Button
+                onPress={handleSubmit as (values: any) => void}
+                disabled={!isValid}
+                status="primary"
+                size="medium"
+              >
+                Agregar
+              </Button>
+            )}
+          </View>
         </Layout>
         {visibleModalOT && modalIngresarOT()}
       </ScrollView>

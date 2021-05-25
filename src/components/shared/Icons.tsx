@@ -38,5 +38,5 @@ export const TrashsIcon = (props: IconProps): IconElement => (
 );
 
 export const SendIcon = (props: IconProps): IconElement => (
-  <Icon {...props} name={"upload-outline"} />
+  <Icon {...props} name={"checkmark-circle-outline"} />
 );

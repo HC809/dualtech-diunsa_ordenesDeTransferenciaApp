@@ -43,7 +43,6 @@ export const startLogin = (model: ILogin) => {
 
     try {
       const response: IApiResponse = await fetchAuth.login(model);
-      console.log(response.data);
       if (response.ok) {
         const { token, username, name } = response.data;
         await AsyncStorage.setItem("token", token);

@@ -3,7 +3,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
 import { View, ListRenderItemInfo } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StackScreenProps } from "@react-navigation/stack";
 import {
   Layout,
   Text,
@@ -30,9 +29,7 @@ import { PRIMARY_COLOR_600 } from "../constants/shared";
 import { LoadingButton } from "../components/shared/LoadingButton";
 import { startSendProductos } from "../store/actions/productos/productosActions";
 
-interface Props extends StackScreenProps<any, any> {}
-
-export const EntradaProductosScreen = ({ navigation }: Props) => {
+export const EntradaProductosScreen = () => {
   const dispatch = useDispatch();
 
   const productosEntrada: IProducto[] = useSelector(
@@ -42,6 +39,15 @@ export const EntradaProductosScreen = ({ navigation }: Props) => {
   const { loading, wasSuccessfull }: ILoadingResponse = useSelector(
     (state: RootState) => state.ui.submitLoading
   );
+
+  const totalItems = (): number => {
+    let total: number = 0;
+    productosEntrada.map((c) => {
+      total += c.Quantity;
+    });
+
+    return total;
+  };
 
   useEffect(() => {
     if (wasSuccessfull) {
@@ -103,17 +109,27 @@ export const EntradaProductosScreen = ({ navigation }: Props) => {
               {loading ? (
                 <LoadingButton text={"Enviando"} status={"primary"} />
               ) : (
-                <Button
-                  accessoryLeft={SendIcon}
-                  onPress={async () => {
-                    const numeroOT = await AsyncStorage.getItem("numeroOT");
-                    dispatch(startSendProductos(productosEntrada, numeroOT!));
-                  }}
-                  status="primary"
-                  disabled={loading}
-                >
-                  Enviar Productos
-                </Button>
+                <View>
+                  <Text
+                    status="primary"
+                    style={{ textAlign: "center", paddingBottom: 5 }}
+                  >{`Total productos: ${productosEntrada.length}`}</Text>
+                  <Text
+                    status="primary"
+                    style={{ textAlign: "center", paddingBottom: 5 }}
+                  >{`Total items: ${totalItems()}`}</Text>
+                  <Button
+                    accessoryLeft={SendIcon}
+                    onPress={async () => {
+                      const numeroOT = await AsyncStorage.getItem("numeroOT");
+                      dispatch(startSendProductos(productosEntrada, numeroOT!));
+                    }}
+                    status="primary"
+                    disabled={loading}
+                  >
+                    Finalizar Recibo
+                  </Button>
+                </View>
               )}
             </View>
           }

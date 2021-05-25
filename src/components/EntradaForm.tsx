@@ -5,6 +5,7 @@ import React, {
   useState,
   useEffect,
 } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
 import { Alert, View } from "react-native";
@@ -26,7 +27,7 @@ import { styles } from "../theme/appTheme";
 import { PRIMARY_COLOR_600 } from "../constants/shared";
 //Actions
 import { startAddProducto } from "../store/actions/productos/productosActions";
-import { finishSubmit } from "../store/actions/ui/loadingActions";
+import { finishSubmit, finishDelete } from "../store/actions/ui/loadingActions";
 //Store
 import { RootState } from "../store/store";
 import { fetchEntrada } from "../helpers/api";
@@ -44,35 +45,51 @@ const CODIGO_BARRA = "codigoBarra";
 const CANTIDAD = "cantidad";
 //#endregion Form Constants
 
-//#region VALIDATION SHEMA
-const entradaValidationSchema: Yup.SchemaOf<IEntrada> = Yup.object({
-  numeroOT: Yup.string().required("Ingrese el número OT."),
-  codigoBarra: Yup.string()
-    .required("Ingrese el código de barra.")
-    .min(3, "Ingrese mínimo 2 caracteres.")
-    .max(50, "Ingrese máximo 25 caracteres."),
-  cantidad: Yup.number()
-    .required("Ingrese la cantidad.")
-    .typeError("La cantidad contiene caracteres no validos.")
-    .min(1, "La cantidad no puede ser cero.")
-    .integer("La cantidad debe ser un número entero."),
-});
-//#endregion VALIDATION SHEMA
-
 export const EntradaForm = React.memo(
   ({ initialValues, visibleModalOT, setVisibleModalOT }: FormProps) => {
     const dispatch = useDispatch();
 
+    const productosEntrada: IProducto[] = useSelector(
+      (state: RootState) => state.productosEntrada
+    );
+
     const [nombreProducto, setNombreProducto] = useState<string>("");
     const [cantidadSugerida, setCantidadSugerida] = useState<number>(0);
 
-    const { loading, wasSuccessfull }: ILoadingResponse = useSelector(
-      (state: RootState) => state.ui.submitLoading
-    );
+    const { wasSuccessfull: enviadosCorrectamente }: ILoadingResponse =
+      useSelector((state: RootState) => state.ui.submitLoading);
 
+    const { loading, wasSuccessfull }: ILoadingResponse = useSelector(
+      (state: RootState) => state.ui.deleteLoading
+    );
+    const [loadingValidarCodigoBarra, setLoadingValidarCodigoBarra] =
+      useState<boolean>(false);
+
+    //#region VALIDATION SHEMA
+    const entradaValidationSchema: Yup.SchemaOf<IEntrada> = Yup.object({
+      numeroOT: Yup.string().required("Ingrese el número OT."),
+      codigoBarra: Yup.string()
+        .required("Ingrese el código de barra.")
+        .min(3, "Ingrese mínimo 2 caracteres.")
+        .max(50, "Ingrese máximo 25 caracteres."),
+      cantidad: Yup.number()
+        .required("Ingrese la cantidad.")
+        .typeError("La cantidad contiene caracteres no validos.")
+        .min(1, "La cantidad no puede ser cero.")
+        .max(
+          cantidadSugerida,
+          "Cantidad ingresada no disponible para la orden."
+        )
+        .integer("La cantidad debe ser un número entero."),
+    });
+    //#endregion VALIDATION SHEMA
+
+    //Producto agregado correctamente
     useEffect(() => {
       if (wasSuccessfull) {
-        dispatch(finishSubmit(false));
+        dispatch(finishDelete(false));
+        setCantidadSugerida(0);
+        setNombreProducto("");
         setFieldValue(CODIGO_BARRA, "");
         setFieldValue(CANTIDAD, 0);
         showMessage({
@@ -87,6 +104,15 @@ export const EntradaForm = React.memo(
       }
     }, [wasSuccessfull, dispatch]);
 
+    //Productos Enviado Correctamente
+    useEffect(() => {
+      if (enviadosCorrectamente) {
+        setFieldValue(NUMERO_OT, "");
+        setCantidadSugerida(0);
+        setNombreProducto("");
+      }
+    }, [enviadosCorrectamente]);
+
     const codigoBarraInput = useRef<Input>(null);
     const cantidadInput = useRef<Input>(null);
 
@@ -98,18 +124,32 @@ export const EntradaForm = React.memo(
       isValid,
       handleBlur,
       setFieldValue,
-      resetForm,
     } = useFormik<IEntrada>({
       initialValues: initialValues,
       onSubmit: (model: IEntrada) => {
-        dispatch(
-          startAddProducto({
-            id: uuidv4(),
-            Barcode: model.codigoBarra.trim(),
-            Quantity: Number(model.cantidad),
-            Name: nombreProducto,
-          })
+        const productoEnLista = productosEntrada.find(
+          (c) => c.Barcode === model.codigoBarra
         );
+        if (productoEnLista) {
+          Alert.alert(
+            "Error",
+            `El producto con el código de barra '${model.codigoBarra}' ya esta en la lista.`,
+            [
+              {
+                text: "Ok",
+              },
+            ]
+          );
+        } else {
+          dispatch(
+            startAddProducto({
+              id: uuidv4(),
+              Barcode: model.codigoBarra.trim(),
+              Quantity: Number(model.cantidad),
+              Name: nombreProducto,
+            })
+          );
+        }
       },
       validationSchema: entradaValidationSchema,
     });
@@ -147,20 +187,20 @@ export const EntradaForm = React.memo(
             returnKeyType="next"
             ref={codigoBarraInput}
             onSubmitEditing={async () => {
-              console.log(values.numeroOT);
-              console.log(values.codigoBarra);
+              setLoadingValidarCodigoBarra(true);
               try {
                 const response: IApiResponse =
                   await fetchEntrada.getCantidadSugerida(
                     values.numeroOT,
                     values.codigoBarra
                   );
+                setLoadingValidarCodigoBarra(false);
                 const { quantity, name } = response.data;
                 if (response.ok) {
                   setNombreProducto(name);
                   setCantidadSugerida(quantity);
-                  setFieldValue(CANTIDAD, quantity);
-                  cantidadInput.current!.focus();
+                  setFieldValue(CANTIDAD, 0);
+                  // cantidadInput.current!.focus();
                 } else {
                   setNombreProducto("");
                   setCantidadSugerida(0);
@@ -171,6 +211,7 @@ export const EntradaForm = React.memo(
                   ]);
                 }
               } catch (error) {
+                setLoadingValidarCodigoBarra(false);
                 setNombreProducto("");
                 setCantidadSugerida(0);
                 Alert.alert(
@@ -184,7 +225,7 @@ export const EntradaForm = React.memo(
                 );
               }
             }}
-            disabled={loading}
+            disabled={loading || loadingValidarCodigoBarra}
           />
           {errors.codigoBarra && (
             <Text style={styles.errorText}>{errors.codigoBarra}</Text>
@@ -192,11 +233,21 @@ export const EntradaForm = React.memo(
           <View>
             <Button
               style={{ marginTop: 20 }}
-              onPress={() => setFieldValue(CODIGO_BARRA, "")}
+              onPress={() => {
+                if (!loading || !loadingValidarCodigoBarra) {
+                  setCantidadSugerida(0);
+                  setNombreProducto("");
+                  setFieldValue(CODIGO_BARRA, "");
+                }
+              }}
               size="tiny"
               appearance="outline"
+              status={loadingValidarCodigoBarra ? "info" : "primary"}
+              disabled={loading}
             >
-              Limpiar código de barra
+              {loadingValidarCodigoBarra
+                ? "Cargando..."
+                : "Limpiar código de barra"}
             </Button>
           </View>
 
@@ -206,7 +257,7 @@ export const EntradaForm = React.memo(
           <Input
             style={styles.formikInput}
             placeholder="Cantidad de producto"
-            caption={`Cantidad sugerida: ${cantidadSugerida}`}
+            // caption={`Cantidad sugerida: ${cantidadSugerida}`}
             value={values.cantidad?.toString().replace(/[. ]/g, "")}
             onChangeText={handleChange(CANTIDAD)}
             onBlur={handleBlur(CANTIDAD)}

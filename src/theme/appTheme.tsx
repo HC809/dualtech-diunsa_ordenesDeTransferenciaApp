@@ -97,4 +97,20 @@ export const styles = StyleSheet.create({
     top: -20,
     right: -30,
   },
+  drawerHeader: {
+    height: 180,
+    paddingHorizontal: 10,
+    paddingTop: 20,
+    justifyContent: "center",
+    alignContent: "center",
+  },
+  profileContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  profileName: {
+    marginHorizontal: 16,
+    fontWeight: "bold",
+    fontSize: 16,
+  },
 });

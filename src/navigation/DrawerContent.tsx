@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { StyleSheet, View, SafeAreaView } from "react-native";
 import {
   DrawerContentComponentProps,
@@ -16,16 +17,18 @@ import {
   Divider,
 } from "@ui-kitten/components";
 //Icons
-import {
-  ConfigIcon,
-  HomeIcon,
-  ProductosIcon,
-} from "../components/shared/Icons";
+import { ConfigIcon, ProductosIcon } from "../components/shared/Icons";
+//Store
+import { RootState } from "../store/store";
+//Styles
+import { styles } from "../theme/appTheme";
 
 export const DrawerContent = ({
   navigation,
   state,
 }: DrawerContentComponentProps<DrawerContentOptions>): DrawerElement => {
+  const { name } = useSelector((state: RootState) => state.auth);
+
   const renderHeader = () => (
     <Layout style={styles.drawerHeader} level="4">
       <View>
@@ -45,6 +48,9 @@ export const DrawerContent = ({
   const renderFooter = () => (
     <React.Fragment>
       <Divider style={{ backgroundColor: "#1160A3" }} />
+      <Text style={{ padding: 10 }} category="s1" appearance="hint">
+        {`Usuario: ${name || "No definido"}`}
+      </Text>
       <Text style={{ padding: 10 }} appearance="hint">
         Versión 1.0.0
       </Text>
@@ -66,22 +72,3 @@ export const DrawerContent = ({
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  drawerHeader: {
-    height: 180,
-    paddingHorizontal: 10,
-    paddingTop: 20,
-    justifyContent: "center",
-    alignContent: "center",
-  },
-  profileContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  profileName: {
-    marginHorizontal: 16,
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-});

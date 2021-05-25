@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Dispatch } from "redux";
 //Constants
 import {
@@ -8,7 +9,12 @@ import {
 //Models
 import { IProducto } from "../../../models/IProducto";
 //Actions
-import { startSubmit, finishSubmit } from "../ui/loadingActions";
+import {
+  startSubmit,
+  finishSubmit,
+  startDelete,
+  finishDelete,
+} from "../ui/loadingActions";
 import { IApiResponse } from "../../../models/shared/IApiResponse";
 import { fetchEntrada } from "../../../helpers/api";
 import { Alert } from "react-native";
@@ -27,15 +33,15 @@ export const deleteProducto = (productoId: string) => {
 
 export const startAddProducto = (producto: IProducto) => {
   return async (dispatch: Dispatch) => {
-    dispatch(startSubmit());
+    dispatch(startDelete());
 
     try {
       await setTimeout(() => {
         dispatch(addProducto(producto));
-        dispatch(finishSubmit(true));
+        dispatch(finishDelete(true));
       }, 1000);
     } catch (e) {
-      dispatch(finishSubmit(false));
+      dispatch(finishDelete(false));
     }
   };
 };
@@ -53,6 +59,7 @@ export const startSendProductos = (
         numeroOT
       );
       if (response.ok) {
+        await AsyncStorage.setItem("numeroOT", "");
         dispatch(setProductos());
         dispatch(finishSubmit(true));
       } else {

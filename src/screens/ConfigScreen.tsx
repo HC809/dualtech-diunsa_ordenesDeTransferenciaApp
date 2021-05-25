@@ -2,7 +2,13 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { DrawerScreenProps } from "@react-navigation/drawer";
-import { Layout, TopNavigation, Divider, Toggle } from "@ui-kitten/components";
+import {
+  Layout,
+  TopNavigation,
+  Divider,
+  Toggle,
+  Text,
+} from "@ui-kitten/components";
 //Components
 import { ScreenTitle } from "../components/navigation/ScreenTitle";
 import { ToggleDrawerAction } from "../components/navigation/ToggleDrawerAction";
@@ -27,6 +33,8 @@ export const ConfigScreen = ({ navigation }: Props) => {
     (state: RootState) => state.config.themeMode
   );
 
+  const { name } = useSelector((state: RootState) => state.auth);
+
   const changeThemeMode = () => {
     dispatch(changeTheme(themeMode === THEME_LIGHT ? THEME_DARK : THEME_LIGHT));
   };
@@ -41,6 +49,9 @@ export const ConfigScreen = ({ navigation }: Props) => {
       />
       <Divider style={styles.dividerColor} />
       <Layout style={styles.flex}>
+        <SettingSection hint="Usuario" onPress={() => {}}>
+          <Text appearance="hint">{name || "No definido"}</Text>
+        </SettingSection>
         <SettingSection hint="Modo Oscuro" onPress={() => {}}>
           <Toggle
             checked={themeMode === THEME_DARK}

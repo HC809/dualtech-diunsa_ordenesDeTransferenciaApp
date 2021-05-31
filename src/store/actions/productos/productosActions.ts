@@ -63,6 +63,7 @@ export const startSendProductos = (
         dispatch(setProductos());
         dispatch(finishSubmit(true));
       } else {
+        dispatch(finishSubmit(false));
         Alert.alert("Error", response.errorMsg, [
           {
             text: "Ok",
@@ -71,7 +72,7 @@ export const startSendProductos = (
       }
     } catch (e) {
       dispatch(finishSubmit(false));
-      Alert.alert("API Error", "Request failed with status code 404", [
+      Alert.alert("API Error", "Request failed with status code 404.", [
         {
           text: "Ok",
         },

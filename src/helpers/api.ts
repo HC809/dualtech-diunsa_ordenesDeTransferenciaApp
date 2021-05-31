@@ -1,9 +1,9 @@
 import axios, { AxiosResponse } from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+//Models
 import { IApiResponse } from "../models/shared/IApiResponse";
 import { ILogin } from "../models/ILogin";
 import { IProducto } from "../models/IProducto";
-//Models
 
 //URL AP
 axios.defaults.baseURL = "http://172.40.20.181:7011/api";

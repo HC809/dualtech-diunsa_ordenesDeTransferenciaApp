@@ -56,12 +56,13 @@ export const EntradaForm = React.memo(
     const [nombreProducto, setNombreProducto] = useState<string>("");
     const [cantidadSugerida, setCantidadSugerida] = useState<number>(0);
 
-    const { wasSuccessfull: enviadosCorrectamente }: ILoadingResponse =
-      useSelector((state: RootState) => state.ui.submitLoading);
-
     const { loading, wasSuccessfull }: ILoadingResponse = useSelector(
       (state: RootState) => state.ui.deleteLoading
     );
+
+    const { wasSuccessfull: enviadosCorrectamente }: ILoadingResponse =
+      useSelector((state: RootState) => state.ui.submitLoading);
+
     const [loadingValidarCodigoBarra, setLoadingValidarCodigoBarra] =
       useState<boolean>(false);
 
@@ -100,7 +101,7 @@ export const EntradaForm = React.memo(
           icon: "success",
           backgroundColor: PRIMARY_COLOR_600,
         });
-        //codigoBarraInput.current?.focus();
+        codigoBarraInput.current?.focus();
       }
     }, [wasSuccessfull, dispatch]);
 
@@ -110,6 +111,7 @@ export const EntradaForm = React.memo(
         setFieldValue(NUMERO_OT, "");
         setCantidadSugerida(0);
         setNombreProducto("");
+        resetForm;
       }
     }, [enviadosCorrectamente]);
 
@@ -124,6 +126,7 @@ export const EntradaForm = React.memo(
       isValid,
       handleBlur,
       setFieldValue,
+      resetForm,
     } = useFormik<IEntrada>({
       initialValues: initialValues,
       onSubmit: (model: IEntrada) => {
@@ -174,6 +177,9 @@ export const EntradaForm = React.memo(
       <ScrollView showsVerticalScrollIndicator={false}>
         <Layout style={{ padding: 18 }} level="4">
           <Text category="s1">{`Número: ${values.numeroOT}`}</Text>
+          {errors.numeroOT && (
+            <Text style={styles.errorText}>{errors.numeroOT}</Text>
+          )}
         </Layout>
         <Layout style={styles.flexLayout}>
           <Text category="s1">Código de barra</Text>

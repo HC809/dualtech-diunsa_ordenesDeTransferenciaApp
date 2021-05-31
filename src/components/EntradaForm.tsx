@@ -201,12 +201,12 @@ export const EntradaForm = React.memo(
                     values.codigoBarra
                   );
                 setLoadingValidarCodigoBarra(false);
-                const { quantity, name } = response.data;
                 if (response.ok) {
+                  const { quantity, name } = response.data;
                   setNombreProducto(name);
                   setCantidadSugerida(quantity);
                   setFieldValue(CANTIDAD, 0);
-                  // cantidadInput.current!.focus();
+                  cantidadInput.current!.focus();
                 } else {
                   setNombreProducto("");
                   setCantidadSugerida(0);

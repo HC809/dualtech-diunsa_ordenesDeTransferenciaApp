@@ -1,8 +1,11 @@
+import { ISelectOption } from "../../../models/shared/ISelectOption";
+
 export const LOGIN = "LOGIN"; //si el token es valido
 export const SET_ERROR_MSG = "SET_ERROR_MSG"; //mensaje de error (crenediales incorrectas)
 export const REMOVE_ERROR = "REMOVE_ERROR"; //remover mensaje de error
 export const NOT_AUTH = "NOT_AUTH"; //token no valido
 export const LOGOUT = "LOGOUT"; //cerrar sesion
+export const SET_STORE = "SET_STORE"; //cerrar sesion
 
 type LoginAction = {
   type: typeof LOGIN;
@@ -30,9 +33,15 @@ type LogoutAction = {
   type: typeof LOGOUT;
 };
 
+type SetStoreAction = {
+  type: typeof SET_STORE;
+  payload: ISelectOption;
+};
+
 export type AuthActionTypes =
   | LoginAction
   | SetErrorMessageAction
   | RemoveErrorMessageAction
   | NotAuthAction
-  | LogoutAction;
+  | LogoutAction
+  | SetStoreAction;

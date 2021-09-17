@@ -16,6 +16,8 @@ import {
   LOGOUT,
 } from "./authActionTypes";
 import { Alert } from "react-native";
+import { ISelectOption } from '../../../models/shared/ISelectOption';
+import { SET_STORE } from './authActionTypes';
 
 const login = (token: string, username: string, name: string) => {
   return { type: LOGIN, payload: { token, username, name } };
@@ -35,6 +37,10 @@ export const notAuth = () => {
 
 export const logout = () => {
   return { type: LOGOUT };
+};
+
+export const setStore = (store: ISelectOption) => {
+  return { type: SET_STORE, payload: store};
 };
 
 export const startLogin = (model: ILogin) => {

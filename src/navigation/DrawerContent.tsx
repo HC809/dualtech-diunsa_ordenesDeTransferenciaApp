@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { StyleSheet, View, SafeAreaView } from "react-native";
+import { StyleSheet, View, SafeAreaView, Alert } from "react-native";
 import {
   DrawerContentComponentProps,
   DrawerContentOptions,
@@ -27,7 +27,7 @@ export const DrawerContent = ({
   navigation,
   state,
 }: DrawerContentComponentProps<DrawerContentOptions>): DrawerElement => {
-  const { name } = useSelector((state: RootState) => state.auth);
+  const { name, storeId } = useSelector((state: RootState) => state.auth);
 
   const renderHeader = () => (
     <Layout style={styles.drawerHeader} level="4">
@@ -62,11 +62,17 @@ export const DrawerContent = ({
       <Drawer
         header={renderHeader}
         selectedIndex={new IndexPath(state.index)}
-        onSelect={(index) => navigation.navigate(state.routeNames[index.row])}
+        onSelect={(index) => {
+          (storeId === undefined || storeId === 0 || storeId === null) && (index.row === 0 || index.row === 1)
+            ? Alert.alert("Seleccione una tienda", "Seleccione una tienda en la pantalla de configuración.")
+            :
+            navigation.navigate(state.routeNames[index.row]);
+        }}
         footer={renderFooter}
       >
         {/* <DrawerItem title="Inicio" accessoryLeft={HomeIcon} /> */}
-        <DrawerItem title="Entrada Producto" accessoryLeft={ProductosIcon} />
+        {/* <DrawerItem title="Entrada Productos" accessoryLeft={ProductosIcon} /> */}
+        <DrawerItem title="Salida de Productos" accessoryLeft={ProductosIcon} />
         <DrawerItem title="Configuración" accessoryLeft={ConfigIcon} />
       </Drawer>
     </SafeAreaView>

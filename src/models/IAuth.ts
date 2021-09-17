@@ -4,4 +4,6 @@ export interface IAuth {
   errorMessage: string;
   username: string | null;
   name: string | null;
+  storeId: number | null;
+  storeName: string | null;
 }

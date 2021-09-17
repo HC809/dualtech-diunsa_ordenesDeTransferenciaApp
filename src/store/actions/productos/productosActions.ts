@@ -16,7 +16,7 @@ import {
   finishDelete,
 } from "../ui/loadingActions";
 import { IApiResponse } from "../../../models/shared/IApiResponse";
-import { fetchEntrada } from "../../../helpers/api";
+import { fetchEntrada, fetchSalida } from "../../../helpers/api";
 import { Alert } from "react-native";
 
 const setProductos = () => {
@@ -62,6 +62,41 @@ export const startSendProductos = (
         await AsyncStorage.setItem("numeroOT", "");
         dispatch(setProductos());
         dispatch(finishSubmit(true));
+      } else {
+        dispatch(finishSubmit(false));
+        Alert.alert("Error", response.errorMsg, [
+          {
+            text: "Ok",
+          },
+        ]);
+      }
+    } catch (e) {
+      dispatch(finishSubmit(false));
+      Alert.alert("API Error", "Request failed with status code 404.", [
+        {
+          text: "Ok",
+        },
+      ]);
+    }
+  };
+};
+
+export const startSendProductosSalida = (
+  productos: IProducto[],
+  storeId: number
+) => {
+  return async (dispatch: Dispatch) => {
+    dispatch(startSubmit());
+    try {
+      const response: IApiResponse = await fetchSalida.agregarListaProducto(
+        productos,
+        storeId
+      );
+      console.log(response);
+      if (response.ok) {
+        dispatch(setProductos());
+        dispatch(finishSubmit(true));
+        Alert.alert("Transferencia generada exitosamente!", response.data);
       } else {
         dispatch(finishSubmit(false));
         Alert.alert("Error", response.errorMsg, [

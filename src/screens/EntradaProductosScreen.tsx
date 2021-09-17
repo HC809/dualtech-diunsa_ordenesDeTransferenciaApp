@@ -125,7 +125,7 @@ export const EntradaProductosScreen = () => {
                       dispatch(startSendProductos(productosEntrada, numeroOT!));
                     }}
                     status="primary"
-                    disabled={loading}
+                    disabled={loading || productosEntradaList.length === 0}
                   >
                     Finalizar Recibo
                   </Button>

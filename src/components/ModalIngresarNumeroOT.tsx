@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from "react-native-gesture-handler";
 import { Layout, Text, Input, Button, Divider } from "@ui-kitten/components";
@@ -9,6 +9,7 @@ import * as Yup from "yup";
 import { styles } from "../theme/appTheme";
 import { fetchEntrada } from "../helpers/api";
 import { IApiResponse } from "../models/shared/IApiResponse";
+import { LoadingButton } from "./shared/LoadingButton";
 
 export interface IIngresarOTForm {
   numeroOT: string;
@@ -40,6 +41,9 @@ export const ModalIngresarNumeroOT = ({
   setFormikFieldValue,
   numeroOTConstant,
 }: IModalProps) => {
+
+  const [loading, setLoading] = useState<boolean>(false);
+
   return (
     <ScrollView>
       <Layout level="2" style={styles.modalContainer}>
@@ -55,10 +59,11 @@ export const ModalIngresarNumeroOT = ({
           initialValues={initialValues}
           onSubmit={async (model: IIngresarOTForm) => {
             try {
+              setLoading(true);
               const response: IApiResponse = await fetchEntrada.validarOT(
                 model.numeroOT
               );
-
+              setLoading(false);
               if (response.ok) {
                 await AsyncStorage.setItem("numeroOT", model.numeroOT);
                 setVisibleModal(false);
@@ -103,25 +108,31 @@ export const ModalIngresarNumeroOT = ({
                   <Text style={styles.errorText}>{errors.numeroOT}</Text>
                 )}
 
-                <View style={styles.buttonRowContainer}>
-                  <Button
-                    style={styles.modalButton}
-                    onPress={() => setVisibleModal(false)}
-                    status="basic"
-                    appearance="outline"
-                    size="medium"
-                  >
-                    Cancelar
-                  </Button>
-                  <Button
-                    style={styles.modalButton}
-                    onPress={handleSubmit as (values: any) => void}
-                    disabled={!isValid}
-                    size="medium"
-                  >
-                    Agregar
-                  </Button>
-                </View>
+                {loading ? (
+                  <View style={{ marginTop: 30 }}>
+                    <LoadingButton text="Validando.." status="primary" />
+                  </View>
+                ) : (
+                  <View style={styles.buttonRowContainer}>
+                    <Button
+                      style={styles.modalButton}
+                      onPress={() => setVisibleModal(false)}
+                      status="basic"
+                      appearance="outline"
+                      size="medium"
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      style={styles.modalButton}
+                      onPress={handleSubmit as (values: any) => void}
+                      disabled={!isValid}
+                      size="medium"
+                    >
+                      Agregar
+                    </Button>
+                  </View>
+                )}
               </View>
             );
           }}

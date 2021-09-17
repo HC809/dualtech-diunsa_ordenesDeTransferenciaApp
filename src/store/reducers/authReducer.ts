@@ -7,6 +7,7 @@ import {
   SET_ERROR_MSG,
   NOT_AUTH,
   LOGOUT,
+  SET_STORE
 } from "../actions/auth/authActionTypes";
 
 const initialState: IAuth = {
@@ -15,6 +16,8 @@ const initialState: IAuth = {
   username: null,
   name: null,
   token: null,
+  storeId: null,
+  storeName: null
 };
 
 const authReducer = (state = initialState, action: AuthActionTypes): IAuth => {
@@ -53,7 +56,16 @@ const authReducer = (state = initialState, action: AuthActionTypes): IAuth => {
         username: null,
         name: null,
         errorMessage: "",
+        storeId: null,
+        storeName: null
       };
+
+      case SET_STORE:
+        return {
+          ...state,
+          storeId: action.payload.id,
+          storeName: action.payload.text,
+        };
 
     default:
       return state;

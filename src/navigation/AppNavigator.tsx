@@ -25,6 +25,8 @@ import {
   CONFIG_SCREEN,
   ENTRADAS_SCREEN,
   ENTRADAS_PRODUCTOS_SCREEN,
+  SALIDA_SCREEN,
+  SALIDA_PRODUCTOS_SCREEN
 } from "../constants/screens";
 import { AUTH } from "../constants/shared";
 //Screens
@@ -33,6 +35,8 @@ import { HomeScreen } from "../screens/HomeScreen";
 import { ConfigScreen } from "../screens/ConfigScreen";
 import { EntradaScreen } from "../screens/EntradaScreen";
 import { EntradaProductosScreen } from "../screens/EntradaProductosScreen";
+import { SalidaScreen } from "../screens/SalidaScreen";
+import { SalidaProductosScreen } from "../screens/SalidaProductoScreen";
 //Drawer Content
 import { DrawerContent } from "./DrawerContent";
 //Store
@@ -45,6 +49,24 @@ const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 
 const EntradaBottomTabBar = (props: BottomTabBarProps<BottomTabBarOptions>) => (
+  <BottomNavigation
+    selectedIndex={props.state.index}
+    onSelect={(index) =>
+      props.navigation.navigate(props.state.routeNames[index])
+    }
+  >
+    <BottomNavigationTab
+      title="Agregar Producto"
+      icon={(p) => <Icon {...p} name="plus-circle-outline" />}
+    />
+    <BottomNavigationTab
+      title="Lista Productos"
+      icon={(p) => <Icon {...p} name="list-outline" />}
+    />
+  </BottomNavigation>
+);
+
+const SalidaBottomTabBar = (props: BottomTabBarProps<BottomTabBarOptions>) => (
   <BottomNavigation
     selectedIndex={props.state.index}
     onSelect={(index) =>
@@ -97,6 +119,16 @@ const EntradaNavigator = () => (
   </Tab.Navigator>
 );
 
+const SalidaNavigator = () => (
+  <Tab.Navigator tabBar={(props) => <SalidaBottomTabBar {...props} />}>
+    <Tab.Screen name={SALIDA_SCREEN} component={SalidaScreen} />
+    <Tab.Screen
+      name={SALIDA_PRODUCTOS_SCREEN}
+      component={SalidaProductosScreen}
+    />
+  </Tab.Navigator>
+);
+
 const ConfigNavigator = () => (
   <Stack.Navigator headerMode="none" initialRouteName={CONFIG_SCREEN}>
     <Stack.Screen
@@ -118,10 +150,11 @@ const MyDrawerNavigator = () => {
     <Drawer.Navigator
       drawerType={width >= 768 ? "permanent" : "front"}
       screenOptions={{ gestureEnabled: true }}
+      initialRouteName={CONFIG_SCREEN}
       drawerContent={(props) => <DrawerContent {...props} />}
     >
-      {/* <Drawer.Screen name={INICIO_SCREEN} component={HomeNavigator} /> */}
-      <Drawer.Screen name={ENTRADAS_SCREEN} component={EntradaNavigator} />
+      {/* <Drawer.Screen name={ENTRADAS_SCREEN} component={EntradaNavigator} /> */}
+      <Drawer.Screen name={SALIDA_SCREEN} component={SalidaNavigator} />
       <Drawer.Screen name={CONFIG_SCREEN} component={ConfigNavigator} />
     </Drawer.Navigator>
   );

@@ -19,19 +19,19 @@ const persistConfig = {
 //   console.log("I am in debug");
 // }
 
-// const composeEnhancers = composeWithDevTools({
-//   realtime: true,
-//   port: 8000,
-//   //hostname: "172.30.31.97",
-//   hostname: "192.168.0.10", //add your computer's IP
-// });
+const composeEnhancers = composeWithDevTools({
+  realtime: true,
+  port: 8000,
+  //hostname: "172.30.31.97",
+  hostname: "172.30.31.123", //add your computer's IP
+});
 
 const persistedReducer = persistReducer<any, any>(persistConfig, Reducers);
 
 const store = createStore(
   persistedReducer,
-  applyMiddleware(thunk)
-  //composeEnhancers(applyMiddleware(thunk))
+  //applyMiddleware(thunk)
+  composeEnhancers(applyMiddleware(thunk))
 );
 const persistor = persistStore(store);
 

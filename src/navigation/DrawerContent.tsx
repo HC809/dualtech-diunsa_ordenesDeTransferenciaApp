@@ -46,7 +46,7 @@ export const DrawerContent = ({
   );
 
   const renderFooter = () => (
-    <React.Fragment>
+    <Layout>
       <Divider style={{ backgroundColor: "#1160A3" }} />
       <Text style={{ padding: 10 }} category="s1" appearance="hint">
         {`Usuario: ${name || "No definido"}`}
@@ -54,7 +54,7 @@ export const DrawerContent = ({
       <Text style={{ padding: 10 }} appearance="hint">
         Versión 1.0.0
       </Text>
-    </React.Fragment>
+    </Layout>
   );
 
   return (

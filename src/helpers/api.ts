@@ -7,9 +7,9 @@ import { IProducto } from "../models/IProducto";
 import { IStoreModel } from "../models/IStoreModel";
 
 //URL AP
-//axios.defaults.baseURL = "http://172.40.20.181:7011/api";
+axios.defaults.baseURL = "http://172.40.20.181:7011/api";
 //axios.defaults.baseURL = "http://172.40.20.181:6011/api";
-axios.defaults.baseURL = "https://koalatestapi.azurewebsites.net/api";
+//axios.defaults.baseURL = "https://koalatestapi.azurewebsites.net/api";
 
 const responseBody = (response: AxiosResponse) => response.data;
 
